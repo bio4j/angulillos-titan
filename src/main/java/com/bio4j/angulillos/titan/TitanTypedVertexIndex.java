@@ -2,12 +2,13 @@ package com.bio4j.angulillos.titan;
 
 import com.bio4j.angulillos.*;
 
+import static com.bio4j.angulillos.conversions.*;
+
 import com.thinkaurelius.titan.core.attribute.Cmp;
 import com.thinkaurelius.titan.core.*;
 
 import java.util.Optional;
-import java.util.List;
-import java.util.LinkedList;
+import java.util.stream.Stream;
 import java.util.Iterator;
 import com.tinkerpop.blueprints.Vertex;
 
@@ -48,39 +49,53 @@ extends
       return graph;
     }
 
-    @Override public Optional<java.util.List<N>> query(com.tinkerpop.blueprints.Compare predicate, V value) {
+    @Override public Stream<N> query(com.tinkerpop.blueprints.Compare predicate, V value) {
 
-      java.util.List<N> list = new LinkedList<>();
+      NT elmt = property.elementType();
 
-      Iterator<Vertex> iterator = graph().raw().titanGraph()
+      Stream<N> strm = stream( graph().raw().titanGraph()
         .query().has(
           property.name(),
           predicate,
           value
         )
-        .vertices().iterator();
+        .vertices()
+      )
+      .map( v -> elmt.from( (TitanVertex) v ) );
+
+      return strm;
+
+      // java.util.List<N> list = new LinkedList<>();
+
+      // Iterator<Vertex> iterator = graph().raw().titanGraph()
+      //   .query().has(
+      //     property.name(),
+      //     predicate,
+      //     value
+      //   )
+      //   .vertices().iterator();
       
-      Boolean someResult = iterator.hasNext();
+      // Boolean someResult = iterator.hasNext();
 
-      while ( iterator.hasNext() ) {
+      // while ( iterator.hasNext() ) {
 
-        Vertex vrtx = iterator.next();
-        NT elmt = property.elementType();
+      //   Vertex vrtx = iterator.next();
+      //   NT elmt = property.elementType();
 
-        if ( elmt != null && vrtx != null ) {
+      //   if ( elmt != null && vrtx != null ) {
 
-          list.add( elmt.from( (TitanVertex) vrtx ) );
-        }
-      }
+      //     list.add( elmt.from( (TitanVertex) vrtx ) );
+      //   }
+      // }
 
-      if (someResult ) {
+      // if (someResult ) {
 
-        return Optional.of(list);
+      //   return Optional.of(list);
 
-      } else {
+      // } else {
 
-        return Optional.empty();
-      }
+      //   return Optional.empty();
+      // }
     }
   }
 

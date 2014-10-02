@@ -2,12 +2,13 @@ package com.bio4j.angulillos.titan;
 
 import com.bio4j.angulillos.*;
 
+import static com.bio4j.angulillos.conversions.*;
+
 import com.thinkaurelius.titan.core.attribute.Cmp;
 import com.thinkaurelius.titan.core.*;
 
-import java.util.List;
+import java.util.stream.Stream;
 import java.util.Optional;
-import java.util.LinkedList;
 import java.util.Iterator;
 import com.tinkerpop.blueprints.Edge;
 
@@ -59,13 +60,7 @@ extends
       R,RT, P,V, G,I,TitanVertex,TitanKey,TitanEdge,TitanLabel,
       T,TT,TG
     > 
-  {
-
-    /*
-      get a relationship by providing a value of the indexed property.
-    */
-    Optional<R> getRelationship(V byValue);
-  }
+  {}
 
   public static interface List <
     // src
@@ -90,13 +85,7 @@ extends
       R,RT, P,V, G,I,TitanVertex,TitanKey,TitanEdge,TitanLabel,
       T,TT,TG
     >
-  {
-
-    /*
-      get a list of relationships by providing a value of the indexed property.
-    */
-    Optional<java.util.List<R>> getRelationships(V byValue);
-  }
+  {}
 
   public static abstract class Default <
     // src
@@ -135,32 +124,47 @@ extends
     @Override
     public G graph() { return graph; }
 
-    @Override public Optional<java.util.List<R>> query(com.tinkerpop.blueprints.Compare predicate, V value) {
+    @Override public Stream<R> query(com.tinkerpop.blueprints.Compare predicate, V value) {
 
-      java.util.List<R> list = new LinkedList<>();
+      RT elmt = property.elementType();
 
-      Iterator<Edge> iterator = graph().raw().titanGraph()
+      Stream<R> strm = stream( graph().raw().titanGraph()
         .query().has(
           property.name(),
           predicate,
           value
         )
-        .edges().iterator();
+        .edges()
+      )
+      .map( e -> elmt.from( (TitanEdge) e ) );
 
-      Boolean someResult = iterator.hasNext();
+      return strm;
 
-      while ( iterator.hasNext() ) {
 
-        list.add(property.elementType().from( (TitanEdge) iterator.next() ));
-      }
+      // java.util.List<R> list = new LinkedList<>();
 
-      if (someResult ) {
+      // Iterator<Edge> iterator = graph().raw().titanGraph()
+      //   .query().has(
+      //     property.name(),
+      //     predicate,
+      //     value
+      //   )
+      //   .edges().iterator();
 
-        return Optional.of(list);
-      } else {
+      // Boolean someResult = iterator.hasNext();
 
-        return Optional.empty();
-      }
+      // while ( iterator.hasNext() ) {
+
+      //   list.add(property.elementType().from( (TitanEdge) iterator.next() ));
+      // }
+
+      // if (someResult ) {
+
+      //   return Optional.of(list);
+      // } else {
+
+      //   return Optional.empty();
+      // }
     }
   }
 
@@ -202,19 +206,19 @@ extends
       super(graph,property);
     }
 
-    public Optional<R> getRelationship(V byValue) {
+    // public Optional<R> getRelationship(V byValue) {
 
-      // crappy Java generics force the cast here
-      TitanEdge uglyStuff = (TitanEdge) graph().raw().titanGraph()
-        .query().has(
-          property.name(),
-          Cmp.EQUAL, 
-          byValue
-        )
-        .edges().iterator().next();
+    //   // crappy Java generics force the cast here
+    //   TitanEdge uglyStuff = (TitanEdge) graph().raw().titanGraph()
+    //     .query().has(
+    //       property.name(),
+    //       Cmp.EQUAL, 
+    //       byValue
+    //     )
+    //     .edges().iterator().next();
 
-      return Optional.of( property.elementType().from(uglyStuff) );
-    }
+    //   return Optional.of( property.elementType().from(uglyStuff) );
+    // }
 
   }
 
@@ -252,11 +256,6 @@ extends
     public DefaultList(G graph, P property) {
 
       super(graph,property);
-    }
-
-    public Optional<java.util.List<R>> getRelationships(V byValue) {
-
-      return getElements(byValue);
     }
   }
 
