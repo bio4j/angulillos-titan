@@ -1,10 +1,10 @@
 package com.bio4j.angulillos.titan;
 
-import java.util.List;
-import java.util.LinkedList;
+import java.util.stream.Stream;
 import java.util.Iterator;
 
 import com.bio4j.angulillos.*;
+import static com.bio4j.angulillos.conversions.*;
 import com.thinkaurelius.titan.core.TitanVertex;
 import com.thinkaurelius.titan.core.TitanEdge;
 import com.thinkaurelius.titan.core.TitanLabel;
@@ -69,63 +69,77 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,TitanKey,Tit
   }
 
   @Override
-  default List<TitanEdge> out(TitanVertex vertex, TitanLabel edgeType) {
+  default Stream<TitanEdge> out(TitanVertex vertex, TitanLabel edgeType) {
 
-    List<TitanEdge> list = new LinkedList<>();
+    return stream( vertex.getTitanEdges(com.tinkerpop.blueprints.Direction.OUT, edgeType) );
 
-    Iterator<TitanEdge> iterE = vertex.getTitanEdges(com.tinkerpop.blueprints.Direction.OUT, edgeType).iterator();
+    // List<TitanEdge> list = new LinkedList<>();
+
+    // Iterator<TitanEdge> iterE = vertex.getTitanEdges(com.tinkerpop.blueprints.Direction.OUT, edgeType).iterator();
     
-    while (iterE.hasNext()) {
+    // while (iterE.hasNext()) {
 
-      list.add(iterE.next());
-    }
+    //   list.add(iterE.next());
+    // }
 
-    return list;
+    // return list;
   }
 
   @Override
-  default List<TitanVertex> outV(TitanVertex vertex, TitanLabel edgeType) {
+  default Stream<TitanVertex> outV(TitanVertex vertex, TitanLabel edgeType) {
 
-    List<TitanVertex> list = new LinkedList<>();
+    return stream( 
+      vertex.getTitanEdges(com.tinkerpop.blueprints.Direction.OUT, edgeType) 
+    )
+    .map( e -> e.getVertex(com.tinkerpop.blueprints.Direction.IN) );
 
-    Iterator<TitanEdge> iterE = vertex.getTitanEdges(com.tinkerpop.blueprints.Direction.OUT, edgeType).iterator();
+    // List<TitanVertex> list = new LinkedList<>();
+
+    // Iterator<TitanEdge> iterE = vertex.getTitanEdges(com.tinkerpop.blueprints.Direction.OUT, edgeType).iterator();
     
-    while (iterE.hasNext()) {
+    // while (iterE.hasNext()) {
 
-      list.add(iterE.next().getVertex(com.tinkerpop.blueprints.Direction.IN));
-    }
+    //   list.add(iterE.next().getVertex(com.tinkerpop.blueprints.Direction.IN));
+    // }
 
-    return list;
+    // return list;
   }
 
   @Override
-  default List<TitanEdge> in(TitanVertex vertex, TitanLabel edgeType) {
+  default Stream<TitanEdge> in(TitanVertex vertex, TitanLabel edgeType) {
 
-    List<TitanEdge> list = new LinkedList<>();
+    return stream( vertex.getTitanEdges(com.tinkerpop.blueprints.Direction.IN, edgeType) );
 
-    Iterator<TitanEdge> iterE = vertex.getTitanEdges(com.tinkerpop.blueprints.Direction.IN, edgeType).iterator();
+    // List<TitanEdge> list = new LinkedList<>();
+
+    // Iterator<TitanEdge> iterE = vertex.getTitanEdges(com.tinkerpop.blueprints.Direction.IN, edgeType).iterator();
     
-    while (iterE.hasNext()) {
+    // while (iterE.hasNext()) {
 
-      list.add(iterE.next());
-    }
+    //   list.add(iterE.next());
+    // }
 
-    return list;
+    // return list;
   }
 
   @Override
-  default List<TitanVertex> inV(TitanVertex vertex, TitanLabel edgeType) {
+  default Stream<TitanVertex> inV(TitanVertex vertex, TitanLabel edgeType) {
 
-    List<TitanVertex> list = new LinkedList<>();
+    return stream( 
+      vertex.getTitanEdges(com.tinkerpop.blueprints.Direction.IN, edgeType) 
+    )
+    .map( e -> e.getVertex(com.tinkerpop.blueprints.Direction.OUT) );
 
-    Iterator<TitanEdge> iterE = vertex.getTitanEdges(com.tinkerpop.blueprints.Direction.IN, edgeType).iterator();
+    // List<TitanVertex> list = new LinkedList<>();
+
+    // Iterator<TitanEdge> iterE = vertex.getTitanEdges(com.tinkerpop.blueprints.Direction.IN, edgeType).iterator();
     
-    while (iterE.hasNext()) {
+    // while (iterE.hasNext()) {
 
-      list.add(iterE.next().getVertex(com.tinkerpop.blueprints.Direction.OUT));
-    }
+    //   list.add(iterE.next().getVertex(com.tinkerpop.blueprints.Direction.OUT));
+    // }
 
-    return list;
+    // return list;
   }
 
 
@@ -135,6 +149,7 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,TitanKey,Tit
   */
   default TitanKey createOrGet(KeyMaker keyMaker, String name) {
 
+    // TODO Stream
     Boolean isNotDefined = true;
 
     TitanKey key = null;
