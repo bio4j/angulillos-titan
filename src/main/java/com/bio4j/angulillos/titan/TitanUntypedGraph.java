@@ -2,6 +2,7 @@ package com.bio4j.angulillos.titan;
 
 import java.util.stream.Stream;
 import java.util.Iterator;
+import java.util.Optional;
 
 import com.bio4j.angulillos.*;
 import static com.bio4j.angulillos.conversions.*;
@@ -69,77 +70,63 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,TitanKey,Tit
   }
 
   @Override
-  default Stream<TitanEdge> out(TitanVertex vertex, TitanLabel edgeType) {
+  default Optional<Stream<TitanEdge>> out(TitanVertex vertex, TitanLabel edgeType) {
 
-    return stream( vertex.getTitanEdges(com.tinkerpop.blueprints.Direction.OUT, edgeType) );
+    Iterable<TitanEdge> itb = vertex.getTitanEdges(com.tinkerpop.blueprints.Direction.OUT, edgeType);
 
-    // List<TitanEdge> list = new LinkedList<>();
+    if ( itb.iterator().hasNext() ) {
 
-    // Iterator<TitanEdge> iterE = vertex.getTitanEdges(com.tinkerpop.blueprints.Direction.OUT, edgeType).iterator();
-    
-    // while (iterE.hasNext()) {
+      return Optional.of( stream( itb ) );
 
-    //   list.add(iterE.next());
-    // }
+    } else {
 
-    // return list;
+      return Optional.empty();
+    }
   }
 
   @Override
-  default Stream<TitanVertex> outV(TitanVertex vertex, TitanLabel edgeType) {
+  default Optional<Stream<TitanVertex>> outV(TitanVertex vertex, TitanLabel edgeType) {
 
-    return stream( 
-      vertex.getTitanEdges(com.tinkerpop.blueprints.Direction.OUT, edgeType) 
-    )
-    .map( e -> e.getVertex(com.tinkerpop.blueprints.Direction.IN) );
+    Iterable<TitanEdge> itb = vertex.getTitanEdges(com.tinkerpop.blueprints.Direction.OUT, edgeType);
 
-    // List<TitanVertex> list = new LinkedList<>();
+    if ( itb.iterator().hasNext() ) {
 
-    // Iterator<TitanEdge> iterE = vertex.getTitanEdges(com.tinkerpop.blueprints.Direction.OUT, edgeType).iterator();
-    
-    // while (iterE.hasNext()) {
+      return Optional.of( stream( itb ).map( e -> e.getVertex(com.tinkerpop.blueprints.Direction.IN) ) );
 
-    //   list.add(iterE.next().getVertex(com.tinkerpop.blueprints.Direction.IN));
-    // }
+    } else {
 
-    // return list;
+      return Optional.empty();
+    }
   }
 
   @Override
-  default Stream<TitanEdge> in(TitanVertex vertex, TitanLabel edgeType) {
+  default Optional<Stream<TitanEdge>> in(TitanVertex vertex, TitanLabel edgeType) {
 
-    return stream( vertex.getTitanEdges(com.tinkerpop.blueprints.Direction.IN, edgeType) );
+    Iterable<TitanEdge> itb = vertex.getTitanEdges(com.tinkerpop.blueprints.Direction.IN, edgeType);
 
-    // List<TitanEdge> list = new LinkedList<>();
+    if ( itb.iterator().hasNext() ) {
 
-    // Iterator<TitanEdge> iterE = vertex.getTitanEdges(com.tinkerpop.blueprints.Direction.IN, edgeType).iterator();
-    
-    // while (iterE.hasNext()) {
+      return Optional.of( stream( itb ) );
 
-    //   list.add(iterE.next());
-    // }
+    } else {
 
-    // return list;
+      return Optional.empty();
+    }
   }
 
   @Override
-  default Stream<TitanVertex> inV(TitanVertex vertex, TitanLabel edgeType) {
+  default Optional<Stream<TitanVertex>> inV(TitanVertex vertex, TitanLabel edgeType) {
 
-    return stream( 
-      vertex.getTitanEdges(com.tinkerpop.blueprints.Direction.IN, edgeType) 
-    )
-    .map( e -> e.getVertex(com.tinkerpop.blueprints.Direction.OUT) );
+    Iterable<TitanEdge> itb = vertex.getTitanEdges(com.tinkerpop.blueprints.Direction.IN, edgeType);
 
-    // List<TitanVertex> list = new LinkedList<>();
+    if ( itb.iterator().hasNext() ) {
 
-    // Iterator<TitanEdge> iterE = vertex.getTitanEdges(com.tinkerpop.blueprints.Direction.IN, edgeType).iterator();
-    
-    // while (iterE.hasNext()) {
+      return Optional.of( stream( itb ).map( e -> e.getVertex(com.tinkerpop.blueprints.Direction.OUT) ) );
 
-    //   list.add(iterE.next().getVertex(com.tinkerpop.blueprints.Direction.OUT));
-    // }
+    } else {
 
-    // return list;
+      return Optional.empty();
+    }
   }
 
 
