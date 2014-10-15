@@ -210,10 +210,12 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,TitanKey,Tit
     KeyMaker keyMaker = titanGraph().makeKey(property.name())
       .dataType(property.valueClass())
       .indexed(com.tinkerpop.blueprints.Vertex.class)
-      .unique();
+      .unique()
+	  .single();
 
     return keyMaker;
   }
+
 
   /*
     create a `TitanKey` for a node type, using the default configuration. If a type with the same name is present it will be returned instead.
@@ -326,5 +328,42 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,TitanKey,Tit
       // .indexed(com.tinkerpop.blueprints.Edge.class)
       .dataType(property.valueClass());
   }
+
+	default <
+			// src
+			S extends TypedVertex<S,ST,SG,I,TitanVertex,TitanKey,TitanEdge,TitanLabel>,
+			ST extends TypedVertex.Type<S,ST,SG,I,TitanVertex,TitanKey,TitanEdge,TitanLabel>,
+			SG extends TypedGraph<SG,I,TitanVertex,TitanKey,TitanEdge,TitanLabel>,
+			// edge
+			R extends TypedEdge<S,ST,SG,R,RT,G,I,TitanVertex,TitanKey,TitanEdge,TitanLabel,T,TT,TG>,
+			RT extends TypedEdge.Type<S,ST,SG,R,RT,G,I,TitanVertex,TitanKey,TitanEdge,TitanLabel,T,TT,TG>,
+			// property
+			P extends Property<R,RT,P,V,G,I,TitanVertex,TitanKey,TitanEdge,TitanLabel>, V,
+			// graph
+			G extends TypedGraph<G,I,TitanVertex,TitanKey,TitanEdge,TitanLabel>, I extends TitanUntypedGraph,
+			//tgt
+			T extends TypedVertex<T,TT,TG,I,TitanVertex,TitanKey,TitanEdge,TitanLabel>,
+			TT extends TypedVertex.Type<T,TT,TG,I,TitanVertex,TitanKey,TitanEdge,TitanLabel>,
+			TG extends TypedGraph<TG,I,TitanVertex,TitanKey,TitanEdge,TitanLabel>
+			>
+	TitanKey titanKeyForEdgePropertySingle(P property) {
+
+		return createOrGet(titanKeyMakerForEdgeProperty(property).single(), property.name());
+	}
+
+	/*
+		create a `TitanKey` for a single vertex property, using the default configuration. If a property with the same name is present it will be returned instead.
+	  */
+	default <
+			N extends TypedVertex<N,NT,G,I,TitanVertex,TitanKey,TitanEdge,TitanLabel>,
+			NT extends TypedVertex.Type<N,NT,G,I,TitanVertex,TitanKey,TitanEdge,TitanLabel>,
+			P extends Property<N,NT,P,V,G,I,TitanVertex,TitanKey,TitanEdge,TitanLabel>, V,
+			G extends TypedGraph<G,I,TitanVertex,TitanKey,TitanEdge,TitanLabel>,
+			I extends TitanUntypedGraph
+			>
+	TitanKey titanKeyForVertexPropertySingle(P property) {
+
+		return createOrGet(titanKeyMakerForVertexProperty(property).single(), property.name());
+	}
 
 }
