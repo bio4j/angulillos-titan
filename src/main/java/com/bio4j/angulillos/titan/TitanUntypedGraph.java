@@ -2,6 +2,7 @@ package com.bio4j.angulillos.titan;
 
 import java.util.stream.Stream;
 import java.util.Iterator;
+import java.util.Optional;
 
 import com.bio4j.angulillos.*;
 import static com.bio4j.angulillos.conversions.*;
@@ -69,77 +70,63 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,TitanKey,Tit
   }
 
   @Override
-  default Stream<TitanEdge> out(TitanVertex vertex, TitanLabel edgeType) {
+  default Optional<Stream<TitanEdge>> out(TitanVertex vertex, TitanLabel edgeType) {
 
-    return stream( vertex.getTitanEdges(com.tinkerpop.blueprints.Direction.OUT, edgeType) );
+    Iterable<TitanEdge> itb = vertex.getTitanEdges(com.tinkerpop.blueprints.Direction.OUT, edgeType);
 
-    // List<TitanEdge> list = new LinkedList<>();
+    if ( itb.iterator().hasNext() ) {
 
-    // Iterator<TitanEdge> iterE = vertex.getTitanEdges(com.tinkerpop.blueprints.Direction.OUT, edgeType).iterator();
-    
-    // while (iterE.hasNext()) {
+      return Optional.of( stream( itb ) );
 
-    //   list.add(iterE.next());
-    // }
+    } else {
 
-    // return list;
+      return Optional.empty();
+    }
   }
 
   @Override
-  default Stream<TitanVertex> outV(TitanVertex vertex, TitanLabel edgeType) {
+  default Optional<Stream<TitanVertex>> outV(TitanVertex vertex, TitanLabel edgeType) {
 
-    return stream( 
-      vertex.getTitanEdges(com.tinkerpop.blueprints.Direction.OUT, edgeType) 
-    )
-    .map( e -> e.getVertex(com.tinkerpop.blueprints.Direction.IN) );
+    Iterable<TitanEdge> itb = vertex.getTitanEdges(com.tinkerpop.blueprints.Direction.OUT, edgeType);
 
-    // List<TitanVertex> list = new LinkedList<>();
+    if ( itb.iterator().hasNext() ) {
 
-    // Iterator<TitanEdge> iterE = vertex.getTitanEdges(com.tinkerpop.blueprints.Direction.OUT, edgeType).iterator();
-    
-    // while (iterE.hasNext()) {
+      return Optional.of( stream( itb ).map( e -> e.getVertex(com.tinkerpop.blueprints.Direction.IN) ) );
 
-    //   list.add(iterE.next().getVertex(com.tinkerpop.blueprints.Direction.IN));
-    // }
+    } else {
 
-    // return list;
+      return Optional.empty();
+    }
   }
 
   @Override
-  default Stream<TitanEdge> in(TitanVertex vertex, TitanLabel edgeType) {
+  default Optional<Stream<TitanEdge>> in(TitanVertex vertex, TitanLabel edgeType) {
 
-    return stream( vertex.getTitanEdges(com.tinkerpop.blueprints.Direction.IN, edgeType) );
+    Iterable<TitanEdge> itb = vertex.getTitanEdges(com.tinkerpop.blueprints.Direction.IN, edgeType);
 
-    // List<TitanEdge> list = new LinkedList<>();
+    if ( itb.iterator().hasNext() ) {
 
-    // Iterator<TitanEdge> iterE = vertex.getTitanEdges(com.tinkerpop.blueprints.Direction.IN, edgeType).iterator();
-    
-    // while (iterE.hasNext()) {
+      return Optional.of( stream( itb ) );
 
-    //   list.add(iterE.next());
-    // }
+    } else {
 
-    // return list;
+      return Optional.empty();
+    }
   }
 
   @Override
-  default Stream<TitanVertex> inV(TitanVertex vertex, TitanLabel edgeType) {
+  default Optional<Stream<TitanVertex>> inV(TitanVertex vertex, TitanLabel edgeType) {
 
-    return stream( 
-      vertex.getTitanEdges(com.tinkerpop.blueprints.Direction.IN, edgeType) 
-    )
-    .map( e -> e.getVertex(com.tinkerpop.blueprints.Direction.OUT) );
+    Iterable<TitanEdge> itb = vertex.getTitanEdges(com.tinkerpop.blueprints.Direction.IN, edgeType);
 
-    // List<TitanVertex> list = new LinkedList<>();
+    if ( itb.iterator().hasNext() ) {
 
-    // Iterator<TitanEdge> iterE = vertex.getTitanEdges(com.tinkerpop.blueprints.Direction.IN, edgeType).iterator();
-    
-    // while (iterE.hasNext()) {
+      return Optional.of( stream( itb ).map( e -> e.getVertex(com.tinkerpop.blueprints.Direction.OUT) ) );
 
-    //   list.add(iterE.next().getVertex(com.tinkerpop.blueprints.Direction.OUT));
-    // }
+    } else {
 
-    // return list;
+      return Optional.empty();
+    }
   }
 
 
@@ -223,10 +210,12 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,TitanKey,Tit
     KeyMaker keyMaker = titanGraph().makeKey(property.name())
       .dataType(property.valueClass())
       .indexed(com.tinkerpop.blueprints.Vertex.class)
-      .unique();
+      .unique()
+	  .single();
 
     return keyMaker;
   }
+
 
   /*
     create a `TitanKey` for a node type, using the default configuration. If a type with the same name is present it will be returned instead.
@@ -339,5 +328,42 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,TitanKey,Tit
       // .indexed(com.tinkerpop.blueprints.Edge.class)
       .dataType(property.valueClass());
   }
+
+	default <
+			// src
+			S extends TypedVertex<S,ST,SG,I,TitanVertex,TitanKey,TitanEdge,TitanLabel>,
+			ST extends TypedVertex.Type<S,ST,SG,I,TitanVertex,TitanKey,TitanEdge,TitanLabel>,
+			SG extends TypedGraph<SG,I,TitanVertex,TitanKey,TitanEdge,TitanLabel>,
+			// edge
+			R extends TypedEdge<S,ST,SG,R,RT,G,I,TitanVertex,TitanKey,TitanEdge,TitanLabel,T,TT,TG>,
+			RT extends TypedEdge.Type<S,ST,SG,R,RT,G,I,TitanVertex,TitanKey,TitanEdge,TitanLabel,T,TT,TG>,
+			// property
+			P extends Property<R,RT,P,V,G,I,TitanVertex,TitanKey,TitanEdge,TitanLabel>, V,
+			// graph
+			G extends TypedGraph<G,I,TitanVertex,TitanKey,TitanEdge,TitanLabel>, I extends TitanUntypedGraph,
+			//tgt
+			T extends TypedVertex<T,TT,TG,I,TitanVertex,TitanKey,TitanEdge,TitanLabel>,
+			TT extends TypedVertex.Type<T,TT,TG,I,TitanVertex,TitanKey,TitanEdge,TitanLabel>,
+			TG extends TypedGraph<TG,I,TitanVertex,TitanKey,TitanEdge,TitanLabel>
+			>
+	TitanKey titanKeyForEdgePropertySingle(P property) {
+
+		return createOrGet(titanKeyMakerForEdgeProperty(property).single(), property.name());
+	}
+
+	/*
+		create a `TitanKey` for a single vertex property, using the default configuration. If a property with the same name is present it will be returned instead.
+	  */
+	default <
+			N extends TypedVertex<N,NT,G,I,TitanVertex,TitanKey,TitanEdge,TitanLabel>,
+			NT extends TypedVertex.Type<N,NT,G,I,TitanVertex,TitanKey,TitanEdge,TitanLabel>,
+			P extends Property<N,NT,P,V,G,I,TitanVertex,TitanKey,TitanEdge,TitanLabel>, V,
+			G extends TypedGraph<G,I,TitanVertex,TitanKey,TitanEdge,TitanLabel>,
+			I extends TitanUntypedGraph
+			>
+	TitanKey titanKeyForVertexPropertySingle(P property) {
+
+		return createOrGet(titanKeyMakerForVertexProperty(property).single(), property.name());
+	}
 
 }
