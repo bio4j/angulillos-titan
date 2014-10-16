@@ -12,4 +12,4 @@ bucketSuffix := "era7.com"
 
 libraryDependencies += "bio4j" % "angulillos" % "0.4.0-SNAPSHOT"
 
-libraryDependencies += "com.thinkaurelius.titan" % "titan-core" % "0.4.4"
+libraryDependencies += "com.thinkaurelius.titan" % "titan-core" % "0.5.1"
