@@ -136,6 +136,9 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabel,
   */
   default TitanKey createOrGet(KeyMaker keyMaker, String name) {
 
+    // way easier now
+    titanGraph().con
+
     // TODO Stream
     Boolean isNotDefined = true;
 
