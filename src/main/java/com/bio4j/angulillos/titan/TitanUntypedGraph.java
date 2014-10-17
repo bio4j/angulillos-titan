@@ -13,6 +13,7 @@ import com.thinkaurelius.titan.core.TitanGraph;
 import com.thinkaurelius.titan.core.*;
 import com.thinkaurelius.titan.core.schema.EdgeLabelMaker;
 import com.thinkaurelius.titan.core.schema.VertexLabelMaker;
+import com.tinkerpop.blueprints.Edge;
 
 public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabel,TitanEdge,EdgeLabel> {
 
@@ -135,42 +136,17 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabel,
   /*
     creates a key in the graph using the provided `KeyMaker` and `name` if there is no such `TitanKey` with that `name`; otherwise it returns the existing `TitanKey` with the provided `name`.
   */
-  default VertexLabel createOrGet(VertexLabelMaker labelMaker, String name) {
-
+  default VertexLabel createOrGet(VertexLabelMaker labelMaker) {
     VertexLabel vertexLabel = titanGraph().getVertexLabel(labelMaker.getName());
-
     return vertexLabel;
   }
 
   /*
     creates a label in the graph using the provided `LabelMaker` and `name` if there is no such `EdgeLabel` with that `name`; otherwise it returns the existing `EdgeLabel` with the provided `name`.
   */
-  public default EdgeLabel createOrGet(EdgeLabelMaker labelMaker, String name) {
-
-    Boolean isNotDefined = true;
-
-    EdgeLabel label = null;
-
-    // first see if there's such a thing there
-    Iterator<EdgeLabel> definedLabels = titanGraph().getTypes(EdgeLabel.class).iterator();
-
-    while( definedLabels.hasNext() ) {
-
-      EdgeLabel someLabel = definedLabels.next();
-
-      if ( someLabel.getName().equals(name) ) { 
-        
-        isNotDefined = false;
-        label = someLabel;
-      }
-    }
-
-    if( isNotDefined ) {
-
-      label = labelMaker.make();
-    }
-
-    return label;
+  public default EdgeLabel createOrGet(EdgeLabelMaker labelMaker) {
+	  EdgeLabel edgeLabel = titanGraph().getEdgeLabel(labelMaker.getName());
+	  return edgeLabel;
   }
 
 
