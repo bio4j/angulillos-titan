@@ -121,6 +121,8 @@ extends
     protected G graph;
     protected P property;
 
+    public P property() { return this.property; }
+
     @Override
     public G graph() { return graph; }
 
