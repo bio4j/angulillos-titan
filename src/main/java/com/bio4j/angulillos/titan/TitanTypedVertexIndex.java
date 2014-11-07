@@ -61,7 +61,23 @@ extends
         )
         .vertices()
       )
-      .map( v -> elmt.from( (TitanVertex) v ) );
+      .flatMap( v -> {
+
+          Stream<N> vs;
+
+          if ( v != null ) {
+
+            vs = Stream.of( elmt.from( (TitanVertex) v ) );
+          }
+          else {
+
+            vs = Stream.empty();
+          }
+
+            return vs;
+          }
+      );
+          
 
       return strm;
 

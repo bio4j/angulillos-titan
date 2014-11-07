@@ -126,6 +126,7 @@ extends
 
     @Override public Stream<R> query(com.tinkerpop.blueprints.Compare predicate, V value) {
 
+      // uh oh could be null
       RT elmt = property.elementType();
 
       Stream<R> strm = stream( graph().raw().titanGraph()
@@ -136,10 +137,26 @@ extends
         )
         .edges()
       )
-      .map( e -> elmt.from( (TitanEdge) e ) );
+      .flatMap( 
+
+        e -> {
+
+          Stream<R> es;
+
+          if ( e != null ) {
+
+            es = Stream.of( elmt.from( (TitanEdge) e ) );
+          }
+          else {
+
+            es = Stream.empty();
+          }
+
+          return es;
+        }
+      );
 
       return strm;
-
 
       // java.util.List<R> list = new LinkedList<>();
 
