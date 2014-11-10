@@ -136,7 +136,6 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,TitanKey,Tit
   */
   default TitanKey createOrGet(KeyMaker keyMaker, String name) {
 
-    // TODO Stream
     Boolean isNotDefined = true;
 
     TitanKey key = null;
