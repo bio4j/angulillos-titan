@@ -36,7 +36,18 @@ extends
 
     public Default(G graph, P property) {
 
+      if( graph == null ) {
+
+        throw new IllegalArgumentException("trying to create an index with a null graph");
+      }
+
       this.graph = graph;
+
+      if( property == null ) {
+
+        throw new IllegalArgumentException("trying to create an index with a null property");
+      }
+
       this.property = property;
     }
 
