@@ -143,7 +143,6 @@ creates a key in the graph using the provided `KeyMaker` and `name` if there is 
 ```java
   default TitanKey createOrGet(KeyMaker keyMaker, String name) {
 
-    // TODO Stream
     Boolean isNotDefined = true;
 
     TitanKey key = null;
