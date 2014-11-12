@@ -326,12 +326,6 @@ extends
 
       mgmt.commit();
     }
-
-    @Override
-    public String name() { 
-
-      return edgeType().name() +":"+ property().name() +":"+ "UNIQUE";
-    }
   }
 
   final class DefaultList <
