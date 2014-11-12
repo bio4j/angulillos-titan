@@ -225,22 +225,6 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabel,
     return labelMaker;
   }
 
-
-  /*
-    create a `TitanKey` for a node type, using the default configuration. If a type with the same name is present it will be returned instead.
-  */
-  // default <
-  //   N extends TypedVertex<N,NT,G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
-  //   NT extends TypedVertex.Type<N,NT,G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
-  //   P extends Property<N,NT,P,V,G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>, V,
-  //   G extends TypedGraph<G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
-  //   I extends TitanUntypedGraph
-  // > 
-  // TitanKey titanKeyForVertexType(P property) {
-
-  //   return createOrGet(titanKeyMakerForVertexType(property), property.name());
-  // }
-
   /*
     Create a LabelMaker with the minimum default for a relationship type; you should use this for defining the corresponding `TitanTitanTypedEdge.Type`. This is a `LabelMaker` so that you can define any custom signature, indexing etc.
   */

@@ -93,38 +93,6 @@ extends
           
 
       return strm;
-
-      // java.util.List<N> list = new LinkedList<>();
-
-      // Iterator<Vertex> iterator = graph().raw().titanGraph()
-      //   .query().has(
-      //     property.name(),
-      //     predicate,
-      //     value
-      //   )
-      //   .vertices().iterator();
-      
-      // Boolean someResult = iterator.hasNext();
-
-      // while ( iterator.hasNext() ) {
-
-      //   Vertex vrtx = iterator.next();
-      //   NT elmt = property.elementType();
-
-      //   if ( elmt != null && vrtx != null ) {
-
-      //     list.add( elmt.from( (TitanVertex) vrtx ) );
-      //   }
-      // }
-
-      // if (someResult ) {
-
-      //   return Optional.of(list);
-
-      // } else {
-
-      //   return Optional.empty();
-      // }
     }
   }
 

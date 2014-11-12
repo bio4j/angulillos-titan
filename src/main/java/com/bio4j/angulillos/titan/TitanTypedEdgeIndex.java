@@ -209,31 +209,6 @@ extends
       );
 
       return strm;
-
-      // java.util.List<R> list = new LinkedList<>();
-
-      // Iterator<Edge> iterator = graph().raw().titanGraph()
-      //   .query().has(
-      //     property.name(),
-      //     predicate,
-      //     value
-      //   )
-      //   .edges().iterator();
-
-      // Boolean someResult = iterator.hasNext();
-
-      // while ( iterator.hasNext() ) {
-
-      //   list.add(property.elementType().from( (TitanEdge) iterator.next() ));
-      // }
-
-      // if (someResult ) {
-
-      //   return Optional.of(list);
-      // } else {
-
-      //   return Optional.empty();
-      // }
     }
   }
 
