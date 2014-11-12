@@ -1,0 +1,1 @@
+First release of a Titan 0.4.1 angulillos implementation. It is functional but pretty minimal at this point: a default Titan untyped graph with helpers for Titan type creation, and standard indexes for vertices and edges.

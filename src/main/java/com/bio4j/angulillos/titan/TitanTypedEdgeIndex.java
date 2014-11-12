@@ -114,18 +114,32 @@ extends
 
     public Default(G graph, P property) {
 
+      if( graph == null ) {
+
+        throw new IllegalArgumentException("trying to create an index with a null graph");
+      }
+
       this.graph = graph;
+
+      if( property == null ) {
+
+        throw new IllegalArgumentException("trying to create an index with a null property");
+      }
+
       this.property = property;
     }
 
     protected G graph;
     protected P property;
 
+    public P property() { return this.property; }
+
     @Override
     public G graph() { return graph; }
 
     @Override public Stream<R> query(com.tinkerpop.blueprints.Compare predicate, V value) {
 
+      // uh oh could be null
       RT elmt = property.elementType();
 
       Stream<R> strm = stream( graph().raw().titanGraph()
@@ -136,10 +150,26 @@ extends
         )
         .edges()
       )
-      .map( e -> elmt.from( (TitanEdge) e ) );
+      .flatMap( 
+
+        e -> {
+
+          Stream<R> es;
+
+          if ( e != null ) {
+
+            es = Stream.of( elmt.from( (TitanEdge) e ) );
+          }
+          else {
+
+            es = Stream.empty();
+          }
+
+          return es;
+        }
+      );
 
       return strm;
-
 
       // java.util.List<R> list = new LinkedList<>();
 
