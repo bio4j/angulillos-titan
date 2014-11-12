@@ -6,6 +6,7 @@ import static com.bio4j.angulillos.conversions.*;
 
 import com.thinkaurelius.titan.core.attribute.Cmp;
 import com.thinkaurelius.titan.core.*;
+import com.thinkaurelius.titan.core.schema.*;
 
 import java.util.stream.Stream;
 import java.util.Optional;
@@ -37,6 +38,12 @@ extends
   >
 {
 
+  // TODO: add this in angulillos at the level of typed element index
+  RT edgeType();
+  TitanGraphIndex raw();
+  P property();
+  String name();
+
   public static interface Unique <
     // src
     S extends TypedVertex<S,ST,SG,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>, 
@@ -59,8 +66,20 @@ extends
       S,ST,SG,
       R,RT, P,V, G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel,
       T,TT,TG
-    > 
-  {}
+    >,
+    TitanTypedEdgeIndex<
+      S,ST,SG,
+      R,RT, P,V, G,
+      T,TT,TG,
+      I
+    >
+  {
+
+    default String name() { 
+
+      return this.edgeType().name() +":"+ this.property().name() +":"+ "UNIQUE";
+    }
+  }
 
   public static interface List <
     // src
@@ -84,8 +103,21 @@ extends
       S,ST,SG,
       R,RT, P,V, G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel,
       T,TT,TG
-    >
-  {}
+    >,
+    TitanTypedEdgeIndex<
+      S,ST,SG,
+      R,RT, P,V, G,
+      T,TT,TG,
+      I
+    > 
+  {
+
+    default String name() { 
+
+      return edgeType().name() +":"+ property().name() +":"+ "LIST";
+    }
+
+  }
 
   public static abstract class Default <
     // src
@@ -112,7 +144,7 @@ extends
     >
   {
 
-    public Default(G graph, P property) {
+    protected Default(G graph, P property) {
 
       if( graph == null ) {
 
@@ -127,12 +159,19 @@ extends
       }
 
       this.property = property;
+
     }
 
+    protected TitanGraphIndex raw;
     protected G graph;
     protected P property;
 
     public P property() { return this.property; }
+
+    @Override
+    public TitanGraphIndex raw() { return raw; }
+
+    public RT edgeType() { return property().elementType(); }
 
     @Override
     public G graph() { return graph; }
@@ -234,22 +273,90 @@ extends
     public DefaultUnique(G graph, P property) {
 
       super(graph,property);
+
+      // TODO: all interaction with this should be done by the graph; or not?
+      I tgrph = graph().raw();
+
+      // create the index
+      // open a new tx
+      TitanManagement mgmt = tgrph.managementSystem();
+
+      // the key we're going to use to create the index
+      PropertyKey pky;
+
+
+      Boolean isKeyThere;
+      // get the property, check for unique etc. if not create it
+      if ( mgmt.containsPropertyKey(property.name()) ) {
+
+        isKeyThere = true;
+        PropertyKey existingKey = mgmt.getPropertyKey( property.name() );
+
+        if( 
+          (existingKey.getDataType() == property.valueClass()) && 
+          (existingKey.getCardinality() == Cardinality.SINGLE)
+        ){
+
+          pky = existingKey;
+        }
+        else {
+
+          throw new IllegalArgumentException("The property key already exists and does not satisfy the requirements:");
+        } 
+      } else {
+
+        isKeyThere = false;
+      }
+
+      if ( ! isKeyThere ) {
+
+        PropertyKeyMaker pkmkr = tgrph.titanPropertyMakerForEdgeProperty(property).cardinality(Cardinality.SINGLE);
+
+        pky = tgrph.createOrGet(pkmkr);
+      }
+      else {
+
+        pky = null;
+
+        throw new IllegalArgumentException("The property key already exists and does not satisfy the requirements:");
+      }
+
+      TitanGraphIndex alreadyThere = mgmt.getGraphIndex(name());
+
+      if( alreadyThere != null && isKeyThere != null ) {
+        
+        // uh oh the index is there, checking times
+        Boolean theExistingIndexIsOk =  alreadyThere.isCompositeIndex()                 &&
+                                        alreadyThere.isUnique()                         &&
+                                        alreadyThere.getFieldKeys().length == 1         &&
+                                        alreadyThere.getFieldKeys()[0] == pky           &&
+                                        alreadyThere.getIndexedElement() == Edge.class;
+
+        if ( theExistingIndexIsOk ) {
+
+          this.raw = alreadyThere;
+        }
+        else {
+
+          throw new IllegalArgumentException("The property key is already indexed with the same index name and incompatible characteristics");
+        }
+      }
+
+      TitanManagement.IndexBuilder indxbldr = mgmt.buildIndex( name(), Edge.class )
+        .addKey(pky)
+        .indexOnly( property.elementType().raw() )
+        .unique();
+
+      indxbldr.buildCompositeIndex();
+
+      mgmt.commit();
     }
 
-    // public Optional<R> getRelationship(V byValue) {
+    @Override
+    public String name() { 
 
-    //   // crappy Java generics force the cast here
-    //   TitanEdge uglyStuff = (TitanEdge) graph().raw().titanGraph()
-    //     .query().has(
-    //       property.name(),
-    //       Cmp.EQUAL, 
-    //       byValue
-    //     )
-    //     .edges().iterator().next();
-
-    //   return Optional.of( property.elementType().from(uglyStuff) );
-    // }
-
+      return edgeType().name() +":"+ property().name() +":"+ "UNIQUE";
+    }
   }
 
   final class DefaultList <
@@ -286,6 +393,81 @@ extends
     public DefaultList(G graph, P property) {
 
       super(graph,property);
+
+      // TODO: all interaction with this should be done by the graph; or not?
+      I tgrph = graph().raw();
+
+      // create the index
+      // open a new tx
+      TitanManagement mgmt = tgrph.managementSystem();
+
+      // the key we're going to use to create the index
+      PropertyKey pky;
+
+
+      Boolean isKeyThere;
+      // get the property, check for unique etc. if not create it
+      if ( mgmt.containsPropertyKey(property.name()) ) {
+
+        isKeyThere = true;
+        PropertyKey existingKey = mgmt.getPropertyKey( property.name() );
+
+        if( existingKey.getDataType() == property.valueClass() ) {
+
+          pky = existingKey;
+        }
+        else {
+
+          throw new IllegalArgumentException("The property key already exists and does not satisfy the requirements:");
+        }
+      }
+      else {
+
+        isKeyThere = false;
+      }
+
+      if ( ! isKeyThere ) {
+
+        PropertyKeyMaker pkmkr = tgrph.titanPropertyMakerForEdgeProperty(property);
+
+        pky = tgrph.createOrGet(pkmkr);
+      }
+      else {
+
+        pky = null;
+
+        throw new IllegalArgumentException("The property key already exists and does not satisfy the requirements:");
+      }
+
+      TitanGraphIndex alreadyThere = mgmt.getGraphIndex(name());
+
+      if( alreadyThere != null ) {
+        
+        // uh oh the index is there, checking times
+        Boolean theExistingIndexIsOk =  alreadyThere.isCompositeIndex()                 &&
+                                        alreadyThere.getFieldKeys().length == 1         &&
+                                        alreadyThere.getFieldKeys()[0] == pky           &&
+                                        ( ! alreadyThere.isUnique() )                   &&
+                                        alreadyThere.getIndexedElement() == Edge.class;
+
+        if ( theExistingIndexIsOk ) {
+
+          this.raw = alreadyThere;
+        }
+        else {
+
+          throw new IllegalArgumentException("The property key is already indexed with the same index name and incompatible characteristics");
+        }
+      }
+
+      TitanManagement.IndexBuilder indxbldr = mgmt.buildIndex( name(), Edge.class )
+        .addKey(pky)
+        .indexOnly( property.elementType().raw() );
+
+      indxbldr.buildCompositeIndex();
+
+      mgmt.commit();
+
     }
   }
 
