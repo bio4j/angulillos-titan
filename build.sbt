@@ -12,6 +12,6 @@ bucketSuffix := "era7.com"
 
 libraryDependencies += "bio4j" % "angulillos" % "0.4.0"
 
-libraryDependencies += "com.thinkaurelius.titan" % "titan-core" % "0.5.1"
+libraryDependencies += "com.thinkaurelius.titan" % "titan-core" % "0.5.0"
 
 dependencyOverrides += "com.tinkerpop.blueprints" % "blueprints-core" % "2.5.0"
