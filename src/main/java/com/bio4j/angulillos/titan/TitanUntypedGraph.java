@@ -2,6 +2,7 @@ package com.bio4j.angulillos.titan;
 
 import java.util.stream.Stream;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
 
 import com.bio4j.angulillos.*;
@@ -13,7 +14,7 @@ import com.tinkerpop.blueprints.Edge;
 public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabel,TitanEdge,EdgeLabel> {
 
   TitanGraph titanGraph();
-  TitanManagement managementSystem();
+  default TitanManagement managementSystem() { return titanGraph().getManagementSystem(); }
 
   default void commit() { titanGraph().commit(); }
 
@@ -204,7 +205,7 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabel,
 
 
   /*
-    Get a `KeyMaker` already configured for creating the key corresponding to a node type. You can use this for defining the corresponding `...`.
+  Get a `VertexLabelMaker` for a vertex type
   */
   default <
     N extends TypedVertex<N,NT,G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
@@ -226,7 +227,7 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabel,
   }
 
   /*
-    Create a LabelMaker with the minimum default for a relationship type; you should use this for defining the corresponding `TitanTitanTypedEdge.Type`. This is a `LabelMaker` so that you can define any custom signature, indexing etc.
+  Create a `LabelMaker` with the minimum defaults (name, arity and directed) for an edge type. As this is a `LabelMaker`, you can further refine it and define its signature, indexing etc. 
   */
   default <
     // src
@@ -265,8 +266,40 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabel,
     return labelMaker;
   }
 
+  // see http://s3.thinkaurelius.com/docs/titan/0.5.1/data-model.html#_individual_edge_layout for why you might want this
+  default <
+    // src
+    S extends TypedVertex<S,ST,SG,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
+    ST extends TypedVertex.Type<S,ST,SG,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
+    SG extends TypedGraph<SG,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
+    // edge
+    R extends TypedEdge<S,ST,SG,R,RT,G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel,T,TT,TG>,
+    // graph
+    RT extends TypedEdge.Type<S,ST,SG,R,RT,G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel,T,TT,TG>,
+    G extends TypedGraph<G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
+    I extends TitanUntypedGraph,
+    //tgt
+    T extends TypedVertex<T,TT,TG,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>, 
+    TT extends TypedVertex.Type<T,TT,TG,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
+    TG extends TypedGraph<TG,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>
+  >
+  EdgeLabelMaker titanLabelMakerForEdgeTypeWithProperties(RT edgeType, PropertyKey[] propertyKeys) {
+
+    // get the EdgeLabelMaker
+    EdgeLabelMaker lblmkr = titanLabelMakerForEdgeType(edgeType);
+
+    // opens a tx!
+    TitanManagement mgmt = managementSystem();
+
+    lblmkr.signature(propertyKeys);
+
+    mgmt.commit();
+
+    return lblmkr;
+  }
+
   /*
-    create a `EdgeLabel` for a relationship type, using the default configuration. If a type with the same name is present it will be returned instead.
+    create an `EdgeLabel` for an type, using the default configuration. If a type with the same name is present it will be returned instead.
   */
   default <
     // src
@@ -285,6 +318,7 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabel,
   >
   EdgeLabel titanLabelForEdgeType(RT relationshipType) {
 
+    // TODO: check that arities etc are ok, throw if not
     return createOrGet(titanLabelMakerForEdgeType(relationshipType));
   }
 
