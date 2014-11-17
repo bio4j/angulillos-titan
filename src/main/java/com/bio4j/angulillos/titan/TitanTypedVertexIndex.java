@@ -211,7 +211,7 @@ extends
       }
 
       // at this point pky is correct whatever it is; let's retrieve it to make Titan happy
-      freshpky = mgmt.getPropertyKey(pky.getName());
+      PropertyKey freshpky = mgmt.getPropertyKey(pky.getName());
       TitanManagement.IndexBuilder indxbldr = mgmt.buildIndex( name(), Vertex.class )
         .addKey(freshpky)
         .indexOnly( property.elementType().raw() )
