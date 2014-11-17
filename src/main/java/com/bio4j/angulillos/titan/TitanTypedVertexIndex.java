@@ -7,6 +7,7 @@ import static com.bio4j.angulillos.conversions.*;
 import com.thinkaurelius.titan.core.attribute.Cmp;
 import com.thinkaurelius.titan.core.*;
 import com.thinkaurelius.titan.core.schema.*;
+import com.thinkaurelius.titan.core.schema.*;
 
 import java.util.Optional;
 import java.util.stream.Stream;

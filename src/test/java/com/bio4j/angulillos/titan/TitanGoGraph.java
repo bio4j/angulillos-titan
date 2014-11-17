@@ -3,6 +3,7 @@
 // import com.bio4j.angulillos.*;
 // import com.bio4j.angulillos.titan.*;
 // import com.thinkaurelius.titan.core.*;
+import com.thinkaurelius.titan.core.schema.*;
 // import com.bio4j.angulillos.test.go.*;
 
 // /*
@@ -10,7 +11,7 @@
 // */
 // public final class TitanGoGraph
 // extends 
-//   GoGraph<TitanUntypedGraph,TitanVertex,TitanKey,TitanEdge,TitanLabel>
+//   GoGraph<TitanUntypedGraph,TitanVertex,PropertyKey,TitanEdge,EdgeLabel>
 // implements 
 //   TitanUntypedGraph
 // {
@@ -21,11 +22,11 @@
 
 //   public final TitanUntypedGraph raw() { return this; }
 
-//   private TitanKey titanTerm;
+//   private PropertyKey titanTerm;
 //   private TermType Term; 
 //   private TitanGoGraph.Term_id Term_id = new Term_id();
 
-//   private TitanLabel titanPartOf;
+//   private EdgeLabel titanPartOf;
 //   private PartOfType PartOf;
 
 //   public TitanGoGraph(TitanGraph raw) {

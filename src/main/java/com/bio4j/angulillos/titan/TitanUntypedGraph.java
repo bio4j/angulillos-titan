@@ -9,6 +9,7 @@ import com.bio4j.angulillos.*;
 import static com.bio4j.angulillos.conversions.*;
 import com.thinkaurelius.titan.core.*;
 import com.thinkaurelius.titan.core.schema.*;
+import com.thinkaurelius.titan.core.schema.*;
 import com.tinkerpop.blueprints.Edge;
 
 public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabel,TitanEdge,EdgeLabel> {
@@ -131,7 +132,7 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabel,
 
   // create types
   /*
-    creates a key in the graph using the provided `KeyMaker` and `name` if there is no such `TitanKey` with that `name`; otherwise it returns the existing `TitanKey` with the provided `name`.
+    creates a key in the graph using the provided `KeyMaker` and `name` if there is no such `PropertyKey` with that `name`; otherwise it returns the existing `PropertyKey` with the provided `name`.
   */
   default VertexLabel createOrGet(VertexLabelMaker labelMaker) {
 
@@ -394,7 +395,7 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabel,
 	// }
 
 	// /*
-	// 	create a `TitanKey` for a single vertex property, using the default configuration. If a property with the same name is present it will be returned instead.
+	// 	create a `PropertyKey` for a single vertex property, using the default configuration. If a property with the same name is present it will be returned instead.
 	//   */
 	// default <
 	// 		N extends TypedVertex<N,NT,G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
@@ -403,7 +404,7 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabel,
 	// 		G extends TypedGraph<G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
 	// 		I extends TitanUntypedGraph
 	// 		>
-	// TitanKey titanKeyForVertexPropertySingle(P property) {
+	// PropertyKey titanKeyForVertexPropertySingle(P property) {
 
 	// 	return createOrGet(titanKeyMakerForVertexProperty(property).single(), property.name());
 	// }
