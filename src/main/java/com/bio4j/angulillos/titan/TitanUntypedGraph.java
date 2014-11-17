@@ -222,7 +222,8 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabel,
     // TODO: evaluate partition() and setStatic()
     VertexLabelMaker labelMaker = mgmt.makeVertexLabel(vertexType.name());
 
-    mgmt.commit();
+    // uh oh
+    // mgmt.commit();
 
     return labelMaker;
   }
@@ -262,7 +263,8 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabel,
       case manyToMany:  labelMaker.multiplicity(Multiplicity.MULTI);
     }
 
-    mgmt.commit();
+    // uh oh
+    // mgmt.commit();
 
     return labelMaker;
   }
@@ -294,7 +296,8 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabel,
 
     lblmkr.signature(propertyKeys);
 
-    mgmt.commit();
+    // uh oh
+    // mgmt.commit();
 
     return lblmkr;
   }
@@ -338,7 +341,8 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabel,
 
     PropertyKeyMaker pkm = mgmt.makePropertyKey(property.name()).dataType(property.valueClass());
 
-    mgmt.commit();
+    // uh oh
+    // mgmt.commit();
 
     return pkm;
   }
@@ -367,7 +371,8 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabel,
 
     PropertyKeyMaker pkm = mgmt.makePropertyKey(property.name()).dataType(property.valueClass());
 
-    mgmt.commit();
+    // uh oh
+    // mgmt.commit();
 
     return pkm;
   }
