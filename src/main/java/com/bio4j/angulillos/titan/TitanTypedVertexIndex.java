@@ -139,7 +139,7 @@ extends
     TitanTypedVertexIndex.Unique<N,NT,P,V,G,I> 
   {
 
-    public DefaultUnique(G graph, P property, TitanManagement mgmt) {
+    public DefaultUnique(TitanManagement mgmt, G graph, P property) {
 
       super(graph,property);
 
