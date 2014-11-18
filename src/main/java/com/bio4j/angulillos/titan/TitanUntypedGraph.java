@@ -18,7 +18,7 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabel,
 
   default void commit() { titanGraph().commit(); }
 
-  default void shutdown() { titanGraph().shutdown(); }
+  default void shutdown() { titanGraph().commit(); titanGraph().shutdown(); }
 
   @Override
   default TitanEdge addEdge(TitanVertex from, EdgeLabel edgeType, TitanVertex to) {
@@ -29,7 +29,7 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabel,
   @Override
   default TitanVertex addVertex(VertexLabel type) {
 
-    return (TitanVertex) titanGraph().addVertexWithLabel(type); 
+    return (TitanVertex) titanGraph().addVertexWithLabel(type.getName()); 
   }
 
   @Override

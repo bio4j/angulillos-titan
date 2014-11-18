@@ -147,7 +147,7 @@ extends
       I tgrph = graph().raw();
 
       // the key we're going to use to create the index
-      PropertyKey pky;
+      PropertyKey pky = null;
 
       Boolean isKeyThere;
       // get the property, check for unique etc. if not create it
@@ -177,12 +177,6 @@ extends
         PropertyKeyMaker pkmkr = tgrph.titanPropertyMakerForVertexProperty(mgmt, property).cardinality(Cardinality.SINGLE);
 
         pky = tgrph.createOrGet(mgmt, pkmkr);
-      }
-      else {
-
-        pky = null;
-
-        throw new IllegalArgumentException("The property key already exists and does not satisfy the requirements");
       }
 
       TitanGraphIndex alreadyThere = mgmt.getGraphIndex(name());
