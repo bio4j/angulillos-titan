@@ -9,7 +9,6 @@ import com.bio4j.angulillos.*;
 import static com.bio4j.angulillos.conversions.*;
 import com.thinkaurelius.titan.core.*;
 import com.thinkaurelius.titan.core.schema.*;
-import com.thinkaurelius.titan.core.schema.*;
 import com.tinkerpop.blueprints.Edge;
 
 public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabel,TitanEdge,EdgeLabel> {
@@ -133,13 +132,13 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabel,
   // create types
   /*
     creates a key in the graph using the provided `KeyMaker` and `name` if there is no such `PropertyKey` with that `name`; otherwise it returns the existing `PropertyKey` with the provided `name`.
+
+    The `TitanManagement` argument should be the one that was used to create `labelMaker`.
   */
-  default VertexLabel createOrGet(VertexLabelMaker labelMaker) {
+  default VertexLabel createOrGet(TitanManagement mgmt, VertexLabelMaker labelMaker) {
 
     VertexLabel vertexLabel;
     String name = labelMaker.getName();
-    // this opens a tx
-    TitanManagement mgmt = managementSystem();
 
     if ( mgmt.containsVertexLabel(name) ) {
 
@@ -150,20 +149,16 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabel,
       vertexLabel = labelMaker.make();
     }
 
-    mgmt.commit();
-
     return vertexLabel;
   }
 
   /*
     creates a label in the graph using the provided `LabelMaker` and `name` if there is no such `EdgeLabel` with that `name`; otherwise it returns the existing `EdgeLabel` with the provided `name`.
   */
-  default EdgeLabel createOrGet(EdgeLabelMaker labelMaker) {
+  default EdgeLabel createOrGet(TitanManagement mgmt, EdgeLabelMaker labelMaker) {
 
     EdgeLabel edgeLabel;
     String name = labelMaker.getName();
-    // this opens a tx
-    TitanManagement mgmt = managementSystem();
 
     if ( mgmt.containsEdgeLabel(name) ) {
 
@@ -174,19 +169,13 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabel,
       edgeLabel = labelMaker.make();
     }
 
-    // close anyway
-    mgmt.commit();
-
     return edgeLabel;
   }
 
-  default PropertyKey createOrGet(PropertyKeyMaker propertyMaker) {
+  default PropertyKey createOrGet(TitanManagement mgmt, PropertyKeyMaker propertyMaker) {
 
     PropertyKey propertyKey;
     String name = propertyMaker.getName();
-
-    // this opens a tx!
-    TitanManagement mgmt = managementSystem();
 
     if ( mgmt.containsPropertyKey(name) ) {
 
@@ -196,9 +185,6 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabel,
 
       propertyKey = propertyMaker.make();
     }
-
-    // close anyway
-    mgmt.commit();
 
     return propertyKey;
   }
@@ -214,16 +200,10 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabel,
     G extends TypedGraph<G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
     I extends TitanUntypedGraph
   >
-  VertexLabelMaker titanLabelMakerForVertexType(NT vertexType) {
-
-    // opens a tx!
-    TitanManagement mgmt = managementSystem();
+  VertexLabelMaker titanLabelMakerForVertexType(TitanManagement mgmt, NT vertexType) {
 
     // TODO: evaluate partition() and setStatic()
     VertexLabelMaker labelMaker = mgmt.makeVertexLabel(vertexType.name());
-
-    // uh oh
-    // mgmt.commit();
 
     return labelMaker;
   }
@@ -246,10 +226,7 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabel,
     TT extends TypedVertex.Type<T,TT,TG,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
     TG extends TypedGraph<TG,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>
   >
-  EdgeLabelMaker titanLabelMakerForEdgeType(RT relationshipType) {
-
-    // opens a tx!
-    TitanManagement mgmt = managementSystem();
+  EdgeLabelMaker titanLabelMakerForEdgeType(TitanManagement mgmt, RT relationshipType) {
 
     EdgeLabelMaker labelMaker = mgmt.makeEdgeLabel(relationshipType.name())
       .directed();
@@ -262,9 +239,6 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabel,
       case manyToOne:   labelMaker.multiplicity(Multiplicity.MANY2ONE);
       case manyToMany:  labelMaker.multiplicity(Multiplicity.MULTI);
     }
-
-    // uh oh
-    // mgmt.commit();
 
     return labelMaker;
   }
@@ -286,19 +260,12 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabel,
     TT extends TypedVertex.Type<T,TT,TG,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
     TG extends TypedGraph<TG,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>
   >
-  EdgeLabelMaker titanLabelMakerForEdgeTypeWithProperties(RT edgeType, PropertyKey[] propertyKeys) {
+  EdgeLabelMaker titanLabelMakerForEdgeTypeWithProperties(TitanManagement mgmt, RT edgeType, PropertyKey[] propertyKeys) {
 
     // get the EdgeLabelMaker
-    EdgeLabelMaker lblmkr = titanLabelMakerForEdgeType(edgeType);
-
-    // opens a tx!
-    TitanManagement mgmt = managementSystem();
+    EdgeLabelMaker lblmkr = titanLabelMakerForEdgeType(mgmt, edgeType);
 
     lblmkr.signature(propertyKeys);
-
-    // uh oh
-    // mgmt.commit();
-
     return lblmkr;
   }
 
@@ -320,10 +287,10 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabel,
     TT extends TypedVertex.Type<T,TT,TG,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
     TG extends TypedGraph<TG,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>
   >
-  EdgeLabel titanLabelForEdgeType(RT relationshipType) {
+  EdgeLabel titanLabelForEdgeType(TitanManagement mgmt, RT relationshipType) {
 
     // TODO: check that arities etc are ok, throw if not
-    return createOrGet(titanLabelMakerForEdgeType(relationshipType));
+    return createOrGet(mgmt, titanLabelMakerForEdgeType(mgmt, relationshipType));
   }
 
 
@@ -334,16 +301,10 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabel,
     G extends TypedGraph<G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
     I extends TitanUntypedGraph
   >
-  PropertyKeyMaker titanPropertyMakerForVertexProperty(P property) {
-
-    // opens a tx!
-    TitanManagement mgmt = managementSystem();
+  PropertyKeyMaker titanPropertyMakerForVertexProperty(TitanManagement mgmt, P property) {
 
     PropertyKeyMaker pkm = mgmt.makePropertyKey(property.name()).dataType(property.valueClass());
-
-    // uh oh
-    // mgmt.commit();
-
+    
     return pkm;
   }
 
@@ -364,15 +325,9 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabel,
     TT extends TypedVertex.Type<T,TT,TG,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
     TG extends TypedGraph<TG,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>  
   >
-  PropertyKeyMaker titanPropertyMakerForEdgeProperty(P property) {
-
-    // opens a tx!
-    TitanManagement mgmt = managementSystem();
+  PropertyKeyMaker titanPropertyMakerForEdgeProperty(TitanManagement mgmt, P property) {
 
     PropertyKeyMaker pkm = mgmt.makePropertyKey(property.name()).dataType(property.valueClass());
-
-    // uh oh
-    // mgmt.commit();
 
     return pkm;
   }

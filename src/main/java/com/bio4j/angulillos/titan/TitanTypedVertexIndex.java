@@ -139,16 +139,12 @@ extends
     TitanTypedVertexIndex.Unique<N,NT,P,V,G,I> 
   {
 
-    public DefaultUnique(G graph, P property) {
+    public DefaultUnique(G graph, P property, TitanManagement mgmt) {
 
       super(graph,property);
 
       // TODO: all interaction with this should be done by the graph; or not?
       I tgrph = graph().raw();
-
-      // create the index
-      // open a new tx
-      TitanManagement mgmt = tgrph.managementSystem();
 
       // the key we're going to use to create the index
       PropertyKey pky;
@@ -178,9 +174,9 @@ extends
 
       if ( ! isKeyThere ) {
 
-        PropertyKeyMaker pkmkr = tgrph.titanPropertyMakerForVertexProperty(property).cardinality(Cardinality.SINGLE);
+        PropertyKeyMaker pkmkr = tgrph.titanPropertyMakerForVertexProperty(mgmt, property).cardinality(Cardinality.SINGLE);
 
-        pky = tgrph.createOrGet(pkmkr);
+        pky = tgrph.createOrGet(mgmt, pkmkr);
       }
       else {
 
@@ -218,8 +214,6 @@ extends
         .unique();
 
       indxbldr.buildCompositeIndex();
-
-      mgmt.commit();
     }
   }
 
@@ -254,16 +248,12 @@ extends
     TitanTypedVertexIndex.List<N,NT,P,V,G,I> 
   {
 
-    public DefaultList(G graph, P property) {
+    public DefaultList(TitanManagement mgmt, G graph, P property) {
 
       super(graph,property);
 
-            // TODO: all interaction with this should be done by the graph; or not?
+      // TODO: all interaction with this should be done by the graph; or not?
       I tgrph = graph().raw();
-
-      // create the index
-      // open a new tx
-      TitanManagement mgmt = tgrph.managementSystem();
 
       // the key we're going to use to create the index
       PropertyKey pky;
@@ -292,9 +282,9 @@ extends
 
       if ( ! isKeyThere ) {
 
-        PropertyKeyMaker pkmkr = tgrph.titanPropertyMakerForVertexProperty(property);
+        PropertyKeyMaker pkmkr = tgrph.titanPropertyMakerForVertexProperty(mgmt, property);
 
-        pky = tgrph.createOrGet(pkmkr);
+        pky = tgrph.createOrGet(mgmt, pkmkr);
       }
       else {
 
@@ -329,8 +319,6 @@ extends
         .indexOnly( property.elementType().raw() );
 
       indxbldr.buildCompositeIndex();
-
-      mgmt.commit();
     }
   }
 

@@ -246,16 +246,12 @@ extends
     > 
   {
 
-    public DefaultUnique(G graph, P property) {
+    public DefaultUnique(TitanManagement mgmt, G graph, P property) {
 
       super(graph,property);
 
       // TODO: all interaction with this should be done by the graph; or not?
       I tgrph = graph().raw();
-
-      // create the index
-      // open a new tx
-      TitanManagement mgmt = tgrph.managementSystem();
 
       // the key we're going to use to create the index
       PropertyKey pky;
@@ -286,9 +282,9 @@ extends
 
       if ( ! isKeyThere ) {
 
-        PropertyKeyMaker pkmkr = tgrph.titanPropertyMakerForEdgeProperty(property).cardinality(Cardinality.SINGLE);
+        PropertyKeyMaker pkmkr = tgrph.titanPropertyMakerForEdgeProperty(mgmt, property).cardinality(Cardinality.SINGLE);
 
-        pky = tgrph.createOrGet(pkmkr);
+        pky = tgrph.createOrGet(mgmt, pkmkr);
       }
       else {
 
@@ -360,20 +356,15 @@ extends
     >
   {
 
-    public DefaultList(G graph, P property) {
+    public DefaultList(TitanManagement mgmt, G graph, P property) {
 
       super(graph,property);
 
       // TODO: all interaction with this should be done by the graph; or not?
       I tgrph = graph().raw();
 
-      // create the index
-      // open a new tx
-      TitanManagement mgmt = tgrph.managementSystem();
-
       // the key we're going to use to create the index
       PropertyKey pky;
-
 
       Boolean isKeyThere;
       // get the property, check for unique etc. if not create it
@@ -398,9 +389,9 @@ extends
 
       if ( ! isKeyThere ) {
 
-        PropertyKeyMaker pkmkr = tgrph.titanPropertyMakerForEdgeProperty(property);
+        PropertyKeyMaker pkmkr = tgrph.titanPropertyMakerForEdgeProperty(mgmt, property);
 
-        pky = tgrph.createOrGet(pkmkr);
+        pky = tgrph.createOrGet(mgmt, pkmkr);
       }
       else {
 
