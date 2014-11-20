@@ -11,7 +11,7 @@ import com.thinkaurelius.titan.core.*;
 import com.thinkaurelius.titan.core.schema.*;
 import com.tinkerpop.blueprints.Edge;
 
-public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabel,TitanEdge,EdgeLabel> {
+public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker> {
 
   TitanGraph titanGraph();
   default TitanManagement managementSystem() { return titanGraph().getManagementSystem(); }
@@ -21,13 +21,13 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabel,
   default void shutdown() { titanGraph().commit(); titanGraph().shutdown(); }
 
   @Override
-  default TitanEdge addEdge(TitanVertex from, EdgeLabel edgeType, TitanVertex to) {
+  default TitanEdge addEdge(TitanVertex from, EdgeLabelMaker edgeType, TitanVertex to) {
 
-    return from.addEdge( edgeType, to );
+    return from.addEdge( edgeType.getName(), to );
   }
 
   @Override
-  default TitanVertex addVertex(VertexLabel type) {
+  default TitanVertex addVertex(VertexLabelMaker type) {
 
     return (TitanVertex) titanGraph().addVertexWithLabel(type.getName()); 
   }
@@ -69,13 +69,13 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabel,
   }
 
   @Override
-  default Optional<Stream<TitanEdge>> out(TitanVertex vertex, EdgeLabel edgeType) {
+  default Optional<Stream<TitanEdge>> out(TitanVertex vertex, EdgeLabelMaker edgeType) {
 
-    Iterable<TitanEdge> itb = vertex.getTitanEdges(com.tinkerpop.blueprints.Direction.OUT, edgeType);
+    Iterable<Edge> itb = vertex.getEdges(com.tinkerpop.blueprints.Direction.OUT, edgeType.getName());
 
     if ( itb.iterator().hasNext() ) {
 
-      return Optional.of( stream( itb ) );
+      return Optional.of( stream( itb ).map( e -> (TitanEdge) e) );
 
     } else {
 
@@ -84,13 +84,13 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabel,
   }
 
   @Override
-  default Optional<Stream<TitanVertex>> outV(TitanVertex vertex, EdgeLabel edgeType) {
+  default Optional<Stream<TitanVertex>> outV(TitanVertex vertex, EdgeLabelMaker edgeType) {
 
-    Iterable<TitanEdge> itb = vertex.getTitanEdges(com.tinkerpop.blueprints.Direction.OUT, edgeType);
+    Iterable<Edge> itb = vertex.getEdges(com.tinkerpop.blueprints.Direction.OUT, edgeType.getName());
 
     if ( itb.iterator().hasNext() ) {
 
-      return Optional.of( stream( itb ).map( e -> e.getVertex(com.tinkerpop.blueprints.Direction.IN) ) );
+      return Optional.of( stream( itb ).map( e -> ( (TitanEdge) e).getVertex(com.tinkerpop.blueprints.Direction.IN) ) );
 
     } else {
 
@@ -99,13 +99,13 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabel,
   }
 
   @Override
-  default Optional<Stream<TitanEdge>> in(TitanVertex vertex, EdgeLabel edgeType) {
+  default Optional<Stream<TitanEdge>> in(TitanVertex vertex, EdgeLabelMaker edgeType) {
 
-    Iterable<TitanEdge> itb = vertex.getTitanEdges(com.tinkerpop.blueprints.Direction.IN, edgeType);
+    Iterable<Edge> itb = vertex.getEdges(com.tinkerpop.blueprints.Direction.IN, edgeType.getName());
 
     if ( itb.iterator().hasNext() ) {
 
-      return Optional.of( stream( itb ) );
+      return Optional.of( stream( itb ).map(e -> (TitanEdge) e) );
 
     } else {
 
@@ -114,13 +114,13 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabel,
   }
 
   @Override
-  default Optional<Stream<TitanVertex>> inV(TitanVertex vertex, EdgeLabel edgeType) {
+  default Optional<Stream<TitanVertex>> inV(TitanVertex vertex, EdgeLabelMaker edgeType) {
 
-    Iterable<TitanEdge> itb = vertex.getTitanEdges(com.tinkerpop.blueprints.Direction.IN, edgeType);
+    Iterable<Edge> itb = vertex.getEdges(com.tinkerpop.blueprints.Direction.IN, edgeType.getName());
 
     if ( itb.iterator().hasNext() ) {
 
-      return Optional.of( stream( itb ).map( e -> e.getVertex(com.tinkerpop.blueprints.Direction.OUT) ) );
+      return Optional.of( stream( itb ).map( e -> ((TitanEdge) e).getVertex(com.tinkerpop.blueprints.Direction.OUT) ) );
 
     } else {
 
@@ -195,9 +195,9 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabel,
   Get a `VertexLabelMaker` for a vertex type
   */
   default <
-    N extends TypedVertex<N,NT,G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
-    NT extends TypedVertex.Type<N,NT,G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
-    G extends TypedGraph<G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
+    N extends TypedVertex<N,NT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
+    NT extends TypedVertex.Type<N,NT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
+    G extends TypedGraph<G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     I extends TitanUntypedGraph
   >
   VertexLabelMaker titanLabelMakerForVertexType(TitanManagement mgmt, NT vertexType) {
@@ -213,18 +213,18 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabel,
   */
   default <
     // src
-    S extends TypedVertex<S,ST,SG,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
-    ST extends TypedVertex.Type<S,ST,SG,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
-    SG extends TypedGraph<SG,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
+    S extends TypedVertex<S,ST,SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
+    ST extends TypedVertex.Type<S,ST,SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
+    SG extends TypedGraph<SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     // edge
-    R extends TypedEdge<S,ST,SG,R,RT,G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel,T,TT,TG>,
-    RT extends TypedEdge.Type<S,ST,SG,R,RT,G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel,T,TT,TG>,
-    G extends TypedGraph<G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
+    R extends TypedEdge<S,ST,SG,R,RT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker,T,TT,TG>,
+    RT extends TypedEdge.Type<S,ST,SG,R,RT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker,T,TT,TG>,
+    G extends TypedGraph<G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     I extends TitanUntypedGraph,
     //tgt
-    T extends TypedVertex<T,TT,TG,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>, 
-    TT extends TypedVertex.Type<T,TT,TG,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
-    TG extends TypedGraph<TG,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>
+    T extends TypedVertex<T,TT,TG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>, 
+    TT extends TypedVertex.Type<T,TT,TG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
+    TG extends TypedGraph<TG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>
   >
   EdgeLabelMaker titanLabelMakerForEdgeType(TitanManagement mgmt, RT relationshipType) {
 
@@ -246,19 +246,19 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabel,
   // see http://s3.thinkaurelius.com/docs/titan/0.5.1/data-model.html#_individual_edge_layout for why you might want this
   default <
     // src
-    S extends TypedVertex<S,ST,SG,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
-    ST extends TypedVertex.Type<S,ST,SG,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
-    SG extends TypedGraph<SG,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
+    S extends TypedVertex<S,ST,SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
+    ST extends TypedVertex.Type<S,ST,SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
+    SG extends TypedGraph<SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     // edge
-    R extends TypedEdge<S,ST,SG,R,RT,G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel,T,TT,TG>,
+    R extends TypedEdge<S,ST,SG,R,RT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker,T,TT,TG>,
     // graph
-    RT extends TypedEdge.Type<S,ST,SG,R,RT,G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel,T,TT,TG>,
-    G extends TypedGraph<G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
+    RT extends TypedEdge.Type<S,ST,SG,R,RT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker,T,TT,TG>,
+    G extends TypedGraph<G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     I extends TitanUntypedGraph,
     //tgt
-    T extends TypedVertex<T,TT,TG,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>, 
-    TT extends TypedVertex.Type<T,TT,TG,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
-    TG extends TypedGraph<TG,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>
+    T extends TypedVertex<T,TT,TG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>, 
+    TT extends TypedVertex.Type<T,TT,TG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
+    TG extends TypedGraph<TG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>
   >
   EdgeLabelMaker titanLabelMakerForEdgeTypeWithProperties(TitanManagement mgmt, RT edgeType, PropertyKey[] propertyKeys) {
 
@@ -274,18 +274,18 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabel,
   */
   default <
     // src
-    S extends TypedVertex<S,ST,SG,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
-    ST extends TypedVertex.Type<S,ST,SG,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
-    SG extends TypedGraph<SG,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
+    S extends TypedVertex<S,ST,SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
+    ST extends TypedVertex.Type<S,ST,SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
+    SG extends TypedGraph<SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     // edge
-    R extends TypedEdge<S,ST,SG,R,RT,G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel,T,TT,TG>,
-    RT extends TypedEdge.Type<S,ST,SG,R,RT,G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel,T,TT,TG>,
-    G extends TypedGraph<G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
+    R extends TypedEdge<S,ST,SG,R,RT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker,T,TT,TG>,
+    RT extends TypedEdge.Type<S,ST,SG,R,RT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker,T,TT,TG>,
+    G extends TypedGraph<G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     I extends TitanUntypedGraph,
     //tgt
-    T extends TypedVertex<T,TT,TG,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
-    TT extends TypedVertex.Type<T,TT,TG,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
-    TG extends TypedGraph<TG,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>
+    T extends TypedVertex<T,TT,TG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
+    TT extends TypedVertex.Type<T,TT,TG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
+    TG extends TypedGraph<TG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>
   >
   EdgeLabel titanLabelForEdgeType(TitanManagement mgmt, RT relationshipType) {
 
@@ -295,10 +295,10 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabel,
 
 
   default <
-    N extends TypedVertex<N,NT,G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
-    NT extends TypedVertex.Type<N,NT,G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
-    P extends Property<N,NT,P,V,G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>, V,
-    G extends TypedGraph<G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
+    N extends TypedVertex<N,NT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
+    NT extends TypedVertex.Type<N,NT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
+    P extends Property<N,NT,P,V,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>, V,
+    G extends TypedGraph<G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     I extends TitanUntypedGraph
   >
   PropertyKeyMaker titanPropertyMakerForVertexProperty(TitanManagement mgmt, P property) {
@@ -310,20 +310,20 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabel,
 
   default <
     // src
-    S extends TypedVertex<S,ST,SG,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
-    ST extends TypedVertex.Type<S,ST,SG,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
-    SG extends TypedGraph<SG,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
+    S extends TypedVertex<S,ST,SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
+    ST extends TypedVertex.Type<S,ST,SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
+    SG extends TypedGraph<SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     // edge
-    R extends TypedEdge<S,ST,SG,R,RT,G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel,T,TT,TG>,
-    RT extends TypedEdge.Type<S,ST,SG,R,RT,G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel,T,TT,TG>,
+    R extends TypedEdge<S,ST,SG,R,RT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker,T,TT,TG>,
+    RT extends TypedEdge.Type<S,ST,SG,R,RT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker,T,TT,TG>,
     // property
-    P extends Property<R,RT,P,V,G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>, V,
+    P extends Property<R,RT,P,V,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>, V,
     // graph
-    G extends TypedGraph<G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>, I extends TitanUntypedGraph,
+    G extends TypedGraph<G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>, I extends TitanUntypedGraph,
     //tgt
-    T extends TypedVertex<T,TT,TG,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
-    TT extends TypedVertex.Type<T,TT,TG,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
-    TG extends TypedGraph<TG,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>  
+    T extends TypedVertex<T,TT,TG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
+    TT extends TypedVertex.Type<T,TT,TG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
+    TG extends TypedGraph<TG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>  
   >
   PropertyKeyMaker titanPropertyMakerForEdgeProperty(TitanManagement mgmt, P property) {
 
@@ -332,41 +332,41 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabel,
     return pkm;
   }
 
-	// default <
-	// 		// src
-	// 		S extends TypedVertex<S,ST,SG,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
-	// 		ST extends TypedVertex.Type<S,ST,SG,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
-	// 		SG extends TypedGraph<SG,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
-	// 		// edge
-	// 		R extends TypedEdge<S,ST,SG,R,RT,G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel,T,TT,TG>,
-	// 		RT extends TypedEdge.Type<S,ST,SG,R,RT,G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel,T,TT,TG>,
-	// 		// property
-	// 		P extends Property<R,RT,P,V,G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>, V,
-	// 		// graph
-	// 		G extends TypedGraph<G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>, I extends TitanUntypedGraph,
-	// 		//tgt
-	// 		T extends TypedVertex<T,TT,TG,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
-	// 		TT extends TypedVertex.Type<T,TT,TG,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
-	// 		TG extends TypedGraph<TG,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>
-	// 		>
-	// PropertyKey titanKeyForEdgePropertySingle(P property) {
+  // default <
+  //    // src
+  //    S extends TypedVertex<S,ST,SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
+  //    ST extends TypedVertex.Type<S,ST,SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
+  //    SG extends TypedGraph<SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
+  //    // edge
+  //    R extends TypedEdge<S,ST,SG,R,RT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker,T,TT,TG>,
+  //    RT extends TypedEdge.Type<S,ST,SG,R,RT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker,T,TT,TG>,
+  //    // property
+  //    P extends Property<R,RT,P,V,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>, V,
+  //    // graph
+  //    G extends TypedGraph<G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>, I extends TitanUntypedGraph,
+  //    //tgt
+  //    T extends TypedVertex<T,TT,TG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
+  //    TT extends TypedVertex.Type<T,TT,TG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
+  //    TG extends TypedGraph<TG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>
+  //    >
+  // PropertyKey titanKeyForEdgePropertySingle(P property) {
 
-	// 	return createOrGet(titanKeyMakerForEdgeProperty(property).single(), property.name());
-	// }
+  //  return createOrGet(titanKeyMakerForEdgeProperty(property).single(), property.name());
+  // }
 
-	// /*
-	// 	create a `PropertyKey` for a single vertex property, using the default configuration. If a property with the same name is present it will be returned instead.
-	//   */
-	// default <
-	// 		N extends TypedVertex<N,NT,G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
-	// 		NT extends TypedVertex.Type<N,NT,G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
-	// 		P extends Property<N,NT,P,V,G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>, V,
-	// 		G extends TypedGraph<G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
-	// 		I extends TitanUntypedGraph
-	// 		>
-	// PropertyKey titanKeyForVertexPropertySingle(P property) {
+  // /*
+  //  create a `PropertyKey` for a single vertex property, using the default configuration. If a property with the same name is present it will be returned instead.
+  //   */
+  // default <
+  //    N extends TypedVertex<N,NT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
+  //    NT extends TypedVertex.Type<N,NT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
+  //    P extends Property<N,NT,P,V,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>, V,
+  //    G extends TypedGraph<G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
+  //    I extends TitanUntypedGraph
+  //    >
+  // PropertyKey titanKeyForVertexPropertySingle(P property) {
 
-	// 	return createOrGet(titanKeyMakerForVertexProperty(property).single(), property.name());
-	// }
+  //  return createOrGet(titanKeyMakerForVertexProperty(property).single(), property.name());
+  // }
 
 }

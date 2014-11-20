@@ -15,14 +15,14 @@ import java.util.Iterator;
 import com.tinkerpop.blueprints.Vertex;
 
 public interface TitanTypedVertexIndex <
-  N extends TypedVertex<N,NT,G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
-  NT extends TypedVertex.Type<N,NT,G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
-  P extends Property<N,NT,P,V,G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>, V,
-  G extends TypedGraph<G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
+  N extends TypedVertex<N,NT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
+  NT extends TypedVertex.Type<N,NT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
+  P extends Property<N,NT,P,V,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>, V,
+  G extends TypedGraph<G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
   I extends TitanUntypedGraph
 > 
 extends 
-  TypedVertexIndex<N,NT,P,V, G, I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>
+  TypedVertexIndex<N,NT,P,V, G, I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>
 {
 
   // TODO: add this in angulillos at the level of typed element index
@@ -32,10 +32,10 @@ extends
   String name();
 
   public static abstract class Default <
-    N extends TypedVertex<N,NT,G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
-    NT extends TypedVertex.Type<N,NT,G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
-    P extends Property<N,NT,P,V,G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>, V,
-    G extends TypedGraph<G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
+    N extends TypedVertex<N,NT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
+    NT extends TypedVertex.Type<N,NT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
+    P extends Property<N,NT,P,V,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>, V,
+    G extends TypedGraph<G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     I extends TitanUntypedGraph
   > 
   implements 
@@ -108,15 +108,15 @@ extends
   }
 
   public interface Unique <
-    N extends TypedVertex<N,NT,G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
-    NT extends TypedVertex.Type<N,NT,G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
-    P extends Property<N,NT,P,V,G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>, V,
-    G extends TypedGraph<G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
+    N extends TypedVertex<N,NT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
+    NT extends TypedVertex.Type<N,NT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
+    P extends Property<N,NT,P,V,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>, V,
+    G extends TypedGraph<G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     I extends TitanUntypedGraph
   > 
   extends
     TitanTypedVertexIndex<N,NT,P,V,G,I>,
-    TypedVertexIndex.Unique<N,NT,P,V,G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>
+    TypedVertexIndex.Unique<N,NT,P,V,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>
   {
 
     default String name() { 
@@ -127,10 +127,10 @@ extends
 
   /* Default implementation of a node unique index */
   public static final class DefaultUnique <
-    N extends TypedVertex<N,NT,G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
-    NT extends TypedVertex.Type<N,NT,G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
-    P extends Property<N,NT,P,V,G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>, V,
-    G extends TypedGraph<G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
+    N extends TypedVertex<N,NT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
+    NT extends TypedVertex.Type<N,NT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
+    P extends Property<N,NT,P,V,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>, V,
+    G extends TypedGraph<G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     I extends TitanUntypedGraph
   > 
   extends
@@ -139,9 +139,14 @@ extends
     TitanTypedVertexIndex.Unique<N,NT,P,V,G,I> 
   {
 
+    private TitanManagement.IndexBuilder indxbldr;
+    private TitanManagement mgmt;
+
     public DefaultUnique(TitanManagement mgmt, G graph, P property) {
 
       super(graph,property);
+
+      this.mgmt = mgmt;
 
       // TODO: all interaction with this should be done by the graph; or not?
       I tgrph = graph().raw();
@@ -202,25 +207,27 @@ extends
 
       // at this point pky is correct whatever it is; let's retrieve it to make Titan happy
       PropertyKey freshpky = mgmt.getPropertyKey(pky.getName());
-      TitanManagement.IndexBuilder indxbldr = mgmt.buildIndex( name(), Vertex.class )
+      this.indxbldr = mgmt.buildIndex( name(), Vertex.class )
         .addKey(freshpky)
-        .indexOnly( property.elementType().raw() )
         .unique();
+    }
 
-      indxbldr.buildCompositeIndex();
+    public final void make(VertexLabel vl) {
+
+      this.raw = indxbldr.indexOnly( vl ).buildCompositeIndex();
     }
   }
 
   public static interface List <
-    N extends TypedVertex<N,NT,G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
-    NT extends TypedVertex.Type<N,NT,G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
-    P extends Property<N,NT,P,V,G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>, V,
-    G extends TypedGraph<G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
+    N extends TypedVertex<N,NT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
+    NT extends TypedVertex.Type<N,NT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
+    P extends Property<N,NT,P,V,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>, V,
+    G extends TypedGraph<G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     I extends TitanUntypedGraph
   > 
   extends
     TitanTypedVertexIndex<N,NT,P,V,G,I>,
-    TypedVertexIndex.List<N,NT,P,V,G, I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>
+    TypedVertexIndex.List<N,NT,P,V,G, I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>
   {
 
     default String name() { 
@@ -230,10 +237,10 @@ extends
   }
 
   public static final class DefaultList <
-    N extends TypedVertex<N,NT,G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
-    NT extends TypedVertex.Type<N,NT,G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
-    P extends Property<N,NT,P,V,G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>, V,
-    G extends TypedGraph<G,I,TitanVertex,VertexLabel,TitanEdge,EdgeLabel>,
+    N extends TypedVertex<N,NT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
+    NT extends TypedVertex.Type<N,NT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
+    P extends Property<N,NT,P,V,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>, V,
+    G extends TypedGraph<G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     I extends TitanUntypedGraph
   > 
   extends
@@ -242,9 +249,14 @@ extends
     TitanTypedVertexIndex.List<N,NT,P,V,G,I> 
   {
 
+    private TitanManagement.IndexBuilder indxbldr;
+    private TitanManagement mgmt;
+
     public DefaultList(TitanManagement mgmt, G graph, P property) {
 
       super(graph,property);
+
+      this.mgmt = mgmt;
 
       // TODO: all interaction with this should be done by the graph; or not?
       I tgrph = graph().raw();
@@ -308,11 +320,13 @@ extends
         }
       }
 
-      TitanManagement.IndexBuilder indxbldr = mgmt.buildIndex( name(), Vertex.class )
-        .addKey(pky)
-        .indexOnly( property.elementType().raw() );
+      indxbldr = mgmt.buildIndex( name(), Vertex.class )
+        .addKey(pky);
+    }
 
-      indxbldr.buildCompositeIndex();
+    public final void make(VertexLabel vl) {
+
+      this.raw = indxbldr.indexOnly( vl ).buildCompositeIndex();
     }
   }
 
