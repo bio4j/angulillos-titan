@@ -1,5 +1,7 @@
-The most significant change is updating to Titan `0.5.x`, which supports proper vertex types and a dramatically simplified type management interface. This introduced
+The most significant change is updating to Titan `0.5.2`, which supports proper vertex types and a dramatically simplified type management interface. This introduced
 
-- the `PropertyKey` used to model a vertex type is now `VertexLabel`
+- the `PropertyKey` used to model a vertex type is now `VertexLabelMaker`
 - type creation is simpler and more expressive
 - index creation can now be done through this API, without needing to resort to the raw Titan objects
+
+Note that we use `xxxMakers` instead of types so that we can make this independent of any transaction management.
