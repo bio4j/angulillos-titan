@@ -188,6 +188,7 @@ extends
           predicate,
           value
         )
+        .has("label", edgeType().name())
         .edges()
       )
       .flatMap( 
