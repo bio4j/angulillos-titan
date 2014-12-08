@@ -83,6 +83,7 @@ extends
           predicate,
           value
         )
+        .has("label", vertexType().name())
         .vertices()
       )
       .flatMap( v -> {
