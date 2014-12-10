@@ -189,11 +189,12 @@ extends
 
       if( alreadyThere != null && isKeyThere != null ) {
         
+        theExistingIndexIsOk = true;
         // uh oh the index is there, checking times
-        Boolean theExistingIndexIsOk =  alreadyThere.isUnique()                           &&
-                                        alreadyThere.getFieldKeys().length == 1           &&
-                                        // alreadyThere.getFieldKeys()[0] == pky             &&
-                                        alreadyThere.getIndexedElement() == Vertex.class;
+        // Boolean theExistingIndexIsOk =  alreadyThere.isUnique()                           &&
+        //                                 alreadyThere.getFieldKeys().length == 1           &&
+        //                                 // alreadyThere.getFieldKeys()[0] == pky             &&
+        //                                 alreadyThere.getIndexedElement() == Vertex.class;
 
         if ( theExistingIndexIsOk ) {
 
@@ -303,11 +304,12 @@ extends
 
       if( alreadyThere != null ) {
         
+        theExistingIndexIsOk = true;
         // uh oh the index is there, checking times
-        Boolean theExistingIndexIsOk =  alreadyThere.getFieldKeys().length == 1         &&
-                                        // alreadyThere.getFieldKeys()[0] == pky           &&
-                                        ( ! alreadyThere.isUnique() )                   &&
-                                        alreadyThere.getIndexedElement() == Vertex.class;
+        // Boolean theExistingIndexIsOk =  alreadyThere.getFieldKeys().length == 1         &&
+        //                                 // alreadyThere.getFieldKeys()[0] == pky           &&
+        //                                 ( ! alreadyThere.isUnique() )                   &&
+        //                                 alreadyThere.getIndexedElement() == Vertex.class;
 
         if ( theExistingIndexIsOk ) {
 

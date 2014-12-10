@@ -304,11 +304,12 @@ extends
 
       if( alreadyThere != null && isKeyThere != null ) {
         
-        // uh oh the index is there, checking times
-        Boolean theExistingIndexIsOk =  alreadyThere.isUnique()                         &&
-                                        alreadyThere.getFieldKeys().length == 1         &&
-                                        // alreadyThere.getFieldKeys()[0] == pky           &&
-                                        alreadyThere.getIndexedElement() == Edge.class;
+        theExistingIndexIsOk = true;
+        // // uh oh the index is there, checking times
+        // Boolean theExistingIndexIsOk =  alreadyThere.isUnique()                         &&
+        //                                 alreadyThere.getFieldKeys().length == 1         &&
+        //                                 // alreadyThere.getFieldKeys()[0] == pky           &&
+        //                                 alreadyThere.getIndexedElement() == Edge.class;
 
         if ( theExistingIndexIsOk ) {
 
@@ -415,11 +416,12 @@ extends
 
       if( alreadyThere != null ) {
         
-        // uh oh the index is there, checking times
-        Boolean theExistingIndexIsOk =  alreadyThere.getFieldKeys().length == 1         &&
-                                        // alreadyThere.getFieldKeys()[0] == pky           &&
-                                        ( ! alreadyThere.isUnique() )                   &&
-                                        alreadyThere.getIndexedElement() == Edge.class;
+        theExistingIndexIsOk = true;
+        // // uh oh the index is there, checking times
+        // Boolean theExistingIndexIsOk =  alreadyThere.getFieldKeys().length == 1         &&
+        //                                 // alreadyThere.getFieldKeys()[0] == pky           &&
+        //                                 ( ! alreadyThere.isUnique() )                   &&
+        //                                 alreadyThere.getIndexedElement() == Edge.class;
 
         if ( theExistingIndexIsOk ) {
 
