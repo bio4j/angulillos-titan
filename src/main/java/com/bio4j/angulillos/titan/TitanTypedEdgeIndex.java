@@ -307,7 +307,7 @@ extends
         // uh oh the index is there, checking times
         Boolean theExistingIndexIsOk =  alreadyThere.isUnique()                         &&
                                         alreadyThere.getFieldKeys().length == 1         &&
-                                        alreadyThere.getFieldKeys()[0] == pky           &&
+                                        // alreadyThere.getFieldKeys()[0] == pky           &&
                                         alreadyThere.getIndexedElement() == Edge.class;
 
         if ( theExistingIndexIsOk ) {
@@ -417,7 +417,7 @@ extends
         
         // uh oh the index is there, checking times
         Boolean theExistingIndexIsOk =  alreadyThere.getFieldKeys().length == 1         &&
-                                        alreadyThere.getFieldKeys()[0] == pky           &&
+                                        // alreadyThere.getFieldKeys()[0] == pky           &&
                                         ( ! alreadyThere.isUnique() )                   &&
                                         alreadyThere.getIndexedElement() == Edge.class;
 
