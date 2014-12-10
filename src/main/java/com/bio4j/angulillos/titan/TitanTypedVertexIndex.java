@@ -217,6 +217,14 @@ extends
 
       this.raw = indxbldr.indexOnly( vl ).buildCompositeIndex();
     }
+
+    public final void makeOrGet(VertexLabel vertexLabel) {
+
+      if ( ! mgmt.containsGraphIndex(name()) ) {
+
+        make(vertexLabel);
+      }
+    }
   }
 
   public static interface List <
@@ -325,9 +333,17 @@ extends
         .addKey(pky);
     }
 
-    public final void make(VertexLabel vl) {
+    private final void make(VertexLabel vl) {
 
       this.raw = indxbldr.indexOnly( vl ).buildCompositeIndex();
+    }
+
+    public final void makeIfNotThere(VertexLabel vertexLabel) {
+
+      if ( ! mgmt.containsGraphIndex(name()) ) {
+
+        make(vertexLabel);
+      }
     }
   }
 

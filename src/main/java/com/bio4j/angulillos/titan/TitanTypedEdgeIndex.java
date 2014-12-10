@@ -326,9 +326,17 @@ extends
         .unique();
     }
 
-    public final void make(EdgeLabel el) {
+    private final void make(EdgeLabel el) {
 
       this.raw = indxbldr.indexOnly( el ).buildCompositeIndex();
+    }
+
+    public final void makeIfNotThere(EdgeLabel edgeLabel) {
+
+      if ( ! mgmt.containsGraphIndex(name()) ) {
+
+        make(edgeLabel);
+      }
     }
   }
 
@@ -437,9 +445,17 @@ extends
         .addKey(pky);
     }
 
-    public final void make(EdgeLabel el) {
+    private final void make(EdgeLabel el) {
 
       this.raw = indxbldr.indexOnly( el ).buildCompositeIndex();
+    }
+
+    public final void makeIfNotThere(EdgeLabel edgeLabel) {
+
+      if ( ! mgmt.containsGraphIndex(name()) ) {
+
+        make(edgeLabel);
+      }
     }
   }
 
