@@ -189,7 +189,7 @@ extends
 
       if( alreadyThere != null && isKeyThere != null ) {
         
-        theExistingIndexIsOk = true;
+        Boolean theExistingIndexIsOk = true;
         // uh oh the index is there, checking times
         // Boolean theExistingIndexIsOk =  alreadyThere.isUnique()                           &&
         //                                 alreadyThere.getFieldKeys().length == 1           &&
@@ -304,7 +304,7 @@ extends
 
       if( alreadyThere != null ) {
         
-        theExistingIndexIsOk = true;
+        Boolean theExistingIndexIsOk = true;
         // uh oh the index is there, checking times
         // Boolean theExistingIndexIsOk =  alreadyThere.getFieldKeys().length == 1         &&
         //                                 // alreadyThere.getFieldKeys()[0] == pky           &&
