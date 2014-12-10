@@ -190,8 +190,7 @@ extends
       if( alreadyThere != null && isKeyThere != null ) {
         
         // uh oh the index is there, checking times
-        Boolean theExistingIndexIsOk =  alreadyThere.isCompositeIndex()                   &&
-                                        alreadyThere.isUnique()                           &&
+        Boolean theExistingIndexIsOk =  alreadyThere.isUnique()                           &&
                                         alreadyThere.getFieldKeys().length == 1           &&
                                         alreadyThere.getFieldKeys()[0] == pky             &&
                                         alreadyThere.getIndexedElement() == Vertex.class;
@@ -305,8 +304,7 @@ extends
       if( alreadyThere != null ) {
         
         // uh oh the index is there, checking times
-        Boolean theExistingIndexIsOk =  alreadyThere.isCompositeIndex()                 &&
-                                        alreadyThere.getFieldKeys().length == 1         &&
+        Boolean theExistingIndexIsOk =  alreadyThere.getFieldKeys().length == 1         &&
                                         alreadyThere.getFieldKeys()[0] == pky           &&
                                         ( ! alreadyThere.isUnique() )                   &&
                                         alreadyThere.getIndexedElement() == Vertex.class;
