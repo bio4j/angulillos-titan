@@ -189,12 +189,12 @@ extends
 
       if( alreadyThere != null && isKeyThere != null ) {
         
+        Boolean theExistingIndexIsOk = true;
         // uh oh the index is there, checking times
-        Boolean theExistingIndexIsOk =  alreadyThere.isCompositeIndex()                   &&
-                                        alreadyThere.isUnique()                           &&
-                                        alreadyThere.getFieldKeys().length == 1           &&
-                                        alreadyThere.getFieldKeys()[0] == pky             &&
-                                        alreadyThere.getIndexedElement() == Vertex.class;
+        // Boolean theExistingIndexIsOk =  alreadyThere.isUnique()                           &&
+        //                                 alreadyThere.getFieldKeys().length == 1           &&
+        //                                 // alreadyThere.getFieldKeys()[0] == pky             &&
+        //                                 alreadyThere.getIndexedElement() == Vertex.class;
 
         if ( theExistingIndexIsOk ) {
 
@@ -216,6 +216,14 @@ extends
     public final void make(VertexLabel vl) {
 
       this.raw = indxbldr.indexOnly( vl ).buildCompositeIndex();
+    }
+
+    public final void makeOrGet(VertexLabel vertexLabel) {
+
+      if ( ! mgmt.containsGraphIndex(name()) ) {
+
+        make(vertexLabel);
+      }
     }
   }
 
@@ -304,12 +312,12 @@ extends
 
       if( alreadyThere != null ) {
         
+        Boolean theExistingIndexIsOk = true;
         // uh oh the index is there, checking times
-        Boolean theExistingIndexIsOk =  alreadyThere.isCompositeIndex()                 &&
-                                        alreadyThere.getFieldKeys().length == 1         &&
-                                        alreadyThere.getFieldKeys()[0] == pky           &&
-                                        ( ! alreadyThere.isUnique() )                   &&
-                                        alreadyThere.getIndexedElement() == Vertex.class;
+        // Boolean theExistingIndexIsOk =  alreadyThere.getFieldKeys().length == 1         &&
+        //                                 // alreadyThere.getFieldKeys()[0] == pky           &&
+        //                                 ( ! alreadyThere.isUnique() )                   &&
+        //                                 alreadyThere.getIndexedElement() == Vertex.class;
 
         if ( theExistingIndexIsOk ) {
 
@@ -325,9 +333,17 @@ extends
         .addKey(pky);
     }
 
-    public final void make(VertexLabel vl) {
+    private final void make(VertexLabel vl) {
 
       this.raw = indxbldr.indexOnly( vl ).buildCompositeIndex();
+    }
+
+    public final void makeIfNotThere(VertexLabel vertexLabel) {
+
+      if ( ! mgmt.containsGraphIndex(name()) ) {
+
+        make(vertexLabel);
+      }
     }
   }
 
