@@ -62,13 +62,14 @@ extends
     protected TitanGraphIndex raw;
     protected G graph;
     protected P property;
+    protected NT vertexType;
 
     public P property() { return this.property; }
 
     @Override
     public TitanGraphIndex raw() { return raw; }
 
-    public NT vertexType() { return property().elementType(); }
+    public NT vertexType() { return this.vertexType; }
 
     @Override
     public G graph() { return graph; }
@@ -122,7 +123,7 @@ extends
 
     default String name() { 
 
-      return this.vertexType().name() +":"+ this.property().name() +":"+ "UNIQUE";
+      return vertexType().name() +":"+ property().name() +":"+ "UNIQUE";
     }
   }
 
@@ -146,6 +147,10 @@ extends
     public DefaultUnique(TitanManagement mgmt, G graph, P property) {
 
       super(graph,property);
+
+      this.property = property;
+      this.vertexType = property.elementType();
+
 
       this.mgmt = mgmt;
 
@@ -185,7 +190,7 @@ extends
         pky = tgrph.createOrGet(mgmt, pkmkr);
       }
 
-      TitanGraphIndex alreadyThere = mgmt.getGraphIndex(name());
+      TitanGraphIndex alreadyThere = mgmt.getGraphIndex(this.name());
 
       if( alreadyThere != null && isKeyThere != null ) {
         
