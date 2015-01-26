@@ -15,6 +15,8 @@ import com.tinkerpop.blueprints.Edge;
 
 public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker> {
 
+
+  // TitanGraphQuery<? extends TitanGraphQuery> query();
   TitanGraph titanGraph();
   default TitanManagement managementSystem() { return titanGraph().getManagementSystem(); }
 

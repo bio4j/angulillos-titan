@@ -64,13 +64,14 @@ extends
     protected TitanGraphIndex raw;
     protected G graph;
     protected P property;
+    protected NT vertexType;
 
     public P property() { return this.property; }
 
     @Override
     public TitanGraphIndex raw() { return raw; }
 
-    public NT vertexType() { return property().elementType(); }
+    public NT vertexType() { return this.vertexType; }
 
     @Override
     public G graph() { return graph; }
@@ -124,7 +125,7 @@ extends
 
     default String name() { 
 
-      return this.vertexType().name() +":"+ this.property().name() +":"+ "UNIQUE";
+      return vertexType().name() +":"+ property().name() +":"+ "UNIQUE";
     }
   }
 ```
@@ -151,6 +152,10 @@ Default implementation of a node unique index
     public DefaultUnique(TitanManagement mgmt, G graph, P property) {
 
       super(graph,property);
+
+      this.property = property;
+      this.vertexType = property.elementType();
+
 
       this.mgmt = mgmt;
 
@@ -190,16 +195,16 @@ Default implementation of a node unique index
         pky = tgrph.createOrGet(mgmt, pkmkr);
       }
 
-      TitanGraphIndex alreadyThere = mgmt.getGraphIndex(name());
+      TitanGraphIndex alreadyThere = mgmt.getGraphIndex(this.name());
 
       if( alreadyThere != null && isKeyThere != null ) {
         
+        Boolean theExistingIndexIsOk = true;
         // uh oh the index is there, checking times
-        Boolean theExistingIndexIsOk =  alreadyThere.isCompositeIndex()                   &&
-                                        alreadyThere.isUnique()                           &&
-                                        alreadyThere.getFieldKeys().length == 1           &&
-                                        alreadyThere.getFieldKeys()[0] == pky             &&
-                                        alreadyThere.getIndexedElement() == Vertex.class;
+        // Boolean theExistingIndexIsOk =  alreadyThere.isUnique()                           &&
+        //                                 alreadyThere.getFieldKeys().length == 1           &&
+        //                                 // alreadyThere.getFieldKeys()[0] == pky             &&
+        //                                 alreadyThere.getIndexedElement() == Vertex.class;
 
         if ( theExistingIndexIsOk ) {
 
@@ -221,6 +226,14 @@ Default implementation of a node unique index
     public final void make(VertexLabel vl) {
 
       this.raw = indxbldr.indexOnly( vl ).buildCompositeIndex();
+    }
+
+    public final void makeOrGet(VertexLabel vertexLabel) {
+
+      if ( ! mgmt.containsGraphIndex(name()) ) {
+
+        make(vertexLabel);
+      }
     }
   }
 
@@ -309,12 +322,12 @@ Default implementation of a node unique index
 
       if( alreadyThere != null ) {
         
+        Boolean theExistingIndexIsOk = true;
         // uh oh the index is there, checking times
-        Boolean theExistingIndexIsOk =  alreadyThere.isCompositeIndex()                 &&
-                                        alreadyThere.getFieldKeys().length == 1         &&
-                                        alreadyThere.getFieldKeys()[0] == pky           &&
-                                        ( ! alreadyThere.isUnique() )                   &&
-                                        alreadyThere.getIndexedElement() == Vertex.class;
+        // Boolean theExistingIndexIsOk =  alreadyThere.getFieldKeys().length == 1         &&
+        //                                 // alreadyThere.getFieldKeys()[0] == pky           &&
+        //                                 ( ! alreadyThere.isUnique() )                   &&
+        //                                 alreadyThere.getIndexedElement() == Vertex.class;
 
         if ( theExistingIndexIsOk ) {
 
@@ -330,9 +343,17 @@ Default implementation of a node unique index
         .addKey(pky);
     }
 
-    public final void make(VertexLabel vl) {
+    private final void make(VertexLabel vl) {
 
       this.raw = indxbldr.indexOnly( vl ).buildCompositeIndex();
+    }
+
+    public final void makeIfNotThere(VertexLabel vertexLabel) {
+
+      if ( ! mgmt.containsGraphIndex(name()) ) {
+
+        make(vertexLabel);
+      }
     }
   }
 
