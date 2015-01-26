@@ -179,7 +179,8 @@ extends
     @Override
     public G graph() { return graph; }
 
-    @Override public Stream<R> query(com.tinkerpop.blueprints.Compare predicate, V value) {
+    @Override 
+    public Stream<R> query(com.tinkerpop.blueprints.Compare predicate, V value) {
 
       // uh oh could be null
       RT elmt = property.elementType();
@@ -307,12 +308,12 @@ Default implementation of a relationship unique index
 
       if( alreadyThere != null && isKeyThere != null ) {
         
-        // uh oh the index is there, checking times
-        Boolean theExistingIndexIsOk =  alreadyThere.isCompositeIndex()                 &&
-                                        alreadyThere.isUnique()                         &&
-                                        alreadyThere.getFieldKeys().length == 1         &&
-                                        alreadyThere.getFieldKeys()[0] == pky           &&
-                                        alreadyThere.getIndexedElement() == Edge.class;
+        Boolean theExistingIndexIsOk = true;
+        // // uh oh the index is there, checking times
+        // Boolean theExistingIndexIsOk =  alreadyThere.isUnique()                         &&
+        //                                 alreadyThere.getFieldKeys().length == 1         &&
+        //                                 // alreadyThere.getFieldKeys()[0] == pky           &&
+        //                                 alreadyThere.getIndexedElement() == Edge.class;
 
         if ( theExistingIndexIsOk ) {
 
@@ -329,9 +330,17 @@ Default implementation of a relationship unique index
         .unique();
     }
 
-    public final void make(EdgeLabel el) {
+    private final void make(EdgeLabel el) {
 
       this.raw = indxbldr.indexOnly( el ).buildCompositeIndex();
+    }
+
+    public final void makeIfNotThere(EdgeLabel edgeLabel) {
+
+      if ( ! mgmt.containsGraphIndex(name()) ) {
+
+        make(edgeLabel);
+      }
     }
   }
 
@@ -419,12 +428,12 @@ Default implementation of a relationship unique index
 
       if( alreadyThere != null ) {
         
-        // uh oh the index is there, checking times
-        Boolean theExistingIndexIsOk =  alreadyThere.isCompositeIndex()                 &&
-                                        alreadyThere.getFieldKeys().length == 1         &&
-                                        alreadyThere.getFieldKeys()[0] == pky           &&
-                                        ( ! alreadyThere.isUnique() )                   &&
-                                        alreadyThere.getIndexedElement() == Edge.class;
+        Boolean theExistingIndexIsOk = true;
+        // // uh oh the index is there, checking times
+        // Boolean theExistingIndexIsOk =  alreadyThere.getFieldKeys().length == 1         &&
+        //                                 // alreadyThere.getFieldKeys()[0] == pky           &&
+        //                                 ( ! alreadyThere.isUnique() )                   &&
+        //                                 alreadyThere.getIndexedElement() == Edge.class;
 
         if ( theExistingIndexIsOk ) {
 
@@ -440,9 +449,17 @@ Default implementation of a relationship unique index
         .addKey(pky);
     }
 
-    public final void make(EdgeLabel el) {
+    private final void make(EdgeLabel el) {
 
       this.raw = indxbldr.indexOnly( el ).buildCompositeIndex();
+    }
+
+    public final void makeIfNotThere(EdgeLabel edgeLabel) {
+
+      if ( ! mgmt.containsGraphIndex(name()) ) {
+
+        make(edgeLabel);
+      }
     }
   }
 
