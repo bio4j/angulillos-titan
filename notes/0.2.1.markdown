@@ -1,0 +1,4 @@
+This is a bugfix release. It solves problems linked with Titan index creation:
+
+- [#11 index creation should be idempotent](/../../issues/11)
+- [#12 index init returning nulls](/../../issues/12) 
