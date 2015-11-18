@@ -393,29 +393,9 @@ create an `EdgeLabel` for an type, using the default configuration. If a type wi
 ```
 
 
-------
 
-### Index
 
-+ src
-  + test
-    + java
-      + com
-        + bio4j
-          + angulillos
-            + titan
-              + [TitanGoGraph.java][test/java/com/bio4j/angulillos/titan/TitanGoGraph.java]
-  + main
-    + java
-      + com
-        + bio4j
-          + angulillos
-            + titan
-              + [TitanTypedEdgeIndex.java][main/java/com/bio4j/angulillos/titan/TitanTypedEdgeIndex.java]
-              + [TitanTypedVertexIndex.java][main/java/com/bio4j/angulillos/titan/TitanTypedVertexIndex.java]
-              + [TitanUntypedGraph.java][main/java/com/bio4j/angulillos/titan/TitanUntypedGraph.java]
-
-[test/java/com/bio4j/angulillos/titan/TitanGoGraph.java]: ../../../../../../test/java/com/bio4j/angulillos/titan/TitanGoGraph.java.md
 [main/java/com/bio4j/angulillos/titan/TitanTypedEdgeIndex.java]: TitanTypedEdgeIndex.java.md
 [main/java/com/bio4j/angulillos/titan/TitanTypedVertexIndex.java]: TitanTypedVertexIndex.java.md
 [main/java/com/bio4j/angulillos/titan/TitanUntypedGraph.java]: TitanUntypedGraph.java.md
+[test/java/com/bio4j/angulillos/titan/TitanGoGraph.java]: ../../../../../../test/java/com/bio4j/angulillos/titan/TitanGoGraph.java.md
