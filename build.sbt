@@ -6,6 +6,7 @@ organization  := "bio4j"
 bucketSuffix  := "era7.com"
 javaVersion   := "1.8"
 
-libraryDependencies += "bio4j" % "angulillos" % "0.4.1"
-
-libraryDependencies += "com.thinkaurelius.titan" % "titan-core" % "0.5.2"
+libraryDependencies ++= Seq(
+  "bio4j"                   % "angulillos" % "0.4.1",
+  "com.thinkaurelius.titan" % "titan-core" % "0.5.4"
+)
