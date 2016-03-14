@@ -16,22 +16,22 @@ import com.tinkerpop.blueprints.Edge;
 
 public interface TitanTypedEdgeIndex <
   // src
-  S extends TypedVertex<S,ST,SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>, 
-  ST extends TypedVertex.Type<S,ST,SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>, 
+  S extends TypedVertex<S,ST,SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
+  ST extends TypedVertex.Type<S,ST,SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
   SG extends TypedGraph<SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
   // edge
-  R extends TypedEdge<S,ST,SG,R,RT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker,T,TT,TG>, 
+  R extends TypedEdge<S,ST,SG,R,RT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker,T,TT,TG>,
   RT extends TypedEdge.Type<S,ST,SG,R,RT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker,T,TT,TG>,
   // property
   P extends Property<R,RT,P,V,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>, V,
   G extends TypedGraph<G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
   //tgt
-  T extends TypedVertex<T,TT,TG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>, 
+  T extends TypedVertex<T,TT,TG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
   TT extends TypedVertex.Type<T,TT,TG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
   TG extends TypedGraph<TG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
   I extends TitanUntypedGraph
-> 
-extends 
+>
+extends
   TypedEdgeIndex<
     S,ST,SG,
     R,RT, P,V, G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker,
@@ -47,22 +47,22 @@ extends
 
   public static interface Unique <
     // src
-    S extends TypedVertex<S,ST,SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>, 
-    ST extends TypedVertex.Type<S,ST,SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>, 
+    S extends TypedVertex<S,ST,SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
+    ST extends TypedVertex.Type<S,ST,SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     SG extends TypedGraph<SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     // edge
-    R extends TypedEdge<S,ST,SG,R,RT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker,T,TT,TG>, 
+    R extends TypedEdge<S,ST,SG,R,RT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker,T,TT,TG>,
     RT extends TypedEdge.Type<S,ST,SG,R,RT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker,T,TT,TG>,
     // property
     P extends Property<R,RT,P,V,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>, V,
     G extends TypedGraph<G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     //tgt
-    T extends TypedVertex<T,TT,TG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>, 
+    T extends TypedVertex<T,TT,TG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     TT extends TypedVertex.Type<T,TT,TG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     TG extends TypedGraph<TG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     I extends TitanUntypedGraph
   >
-  extends 
+  extends
     TypedEdgeIndex.Unique<
       S,ST,SG,
       R,RT, P,V, G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker,
@@ -76,7 +76,7 @@ extends
     >
   {
 
-    default String name() { 
+    default String name() {
 
       return this.edgeType().name() +":"+ this.property().name() +":"+ "UNIQUE";
     }
@@ -84,22 +84,22 @@ extends
 
   public static interface List <
     // src
-    S extends TypedVertex<S,ST,SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>, 
-    ST extends TypedVertex.Type<S,ST,SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>, 
+    S extends TypedVertex<S,ST,SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
+    ST extends TypedVertex.Type<S,ST,SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     SG extends TypedGraph<SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     // edge
-    R extends TypedEdge<S,ST,SG,R,RT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker,T,TT,TG>, 
+    R extends TypedEdge<S,ST,SG,R,RT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker,T,TT,TG>,
     RT extends TypedEdge.Type<S,ST,SG,R,RT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker,T,TT,TG>,
     // property
     P extends Property<R,RT,P,V,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>, V,
     G extends TypedGraph<G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     //tgt
-    T extends TypedVertex<T,TT,TG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>, 
+    T extends TypedVertex<T,TT,TG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     TT extends TypedVertex.Type<T,TT,TG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     TG extends TypedGraph<TG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     I extends TitanUntypedGraph
-  > 
-  extends 
+  >
+  extends
     TypedEdgeIndex.List<
       S,ST,SG,
       R,RT, P,V, G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker,
@@ -110,10 +110,10 @@ extends
       R,RT, P,V, G,
       T,TT,TG,
       I
-    > 
+    >
   {
 
-    default String name() { 
+    default String name() {
 
       return edgeType().name() +":"+ property().name() +":"+ "LIST";
     }
@@ -122,17 +122,17 @@ extends
 
   public static abstract class Default <
     // src
-    S extends TypedVertex<S,ST,SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>, 
-    ST extends TypedVertex.Type<S,ST,SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>, 
+    S extends TypedVertex<S,ST,SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
+    ST extends TypedVertex.Type<S,ST,SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     SG extends TypedGraph<SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     // edge
-    R extends TypedEdge<S,ST,SG,R,RT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker,T,TT,TG>, 
+    R extends TypedEdge<S,ST,SG,R,RT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker,T,TT,TG>,
     RT extends TypedEdge.Type<S,ST,SG,R,RT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker,T,TT,TG>,
     // property
     P extends Property<R,RT,P,V,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>, V,
     G extends TypedGraph<G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     //tgt
-    T extends TypedVertex<T,TT,TG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>, 
+    T extends TypedVertex<T,TT,TG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     TT extends TypedVertex.Type<T,TT,TG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     TG extends TypedGraph<TG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     I extends TitanUntypedGraph
@@ -177,8 +177,8 @@ extends
     @Override
     public G graph() { return graph; }
 
-    @Override 
-    public Stream<R> query(com.tinkerpop.blueprints.Compare predicate, V value) {
+    @Override
+    public Stream<R> query(V value) {
 
       // uh oh could be null
       RT elmt = property.elementType();
@@ -186,13 +186,14 @@ extends
       Stream<R> strm = stream( graph().raw().titanGraph()
         .query().has(
           property.name(),
-          predicate,
+          // FIXME: not sure that we want to query only by value
+          // predicate,
           value
         )
         .has("label", edgeType().name())
         .edges()
       )
-      .flatMap( 
+      .flatMap(
 
         e -> {
 
@@ -219,33 +220,33 @@ extends
   /* Default implementation of a relationship unique index */
   public final class DefaultUnique <
     // src
-    S extends TypedVertex<S,ST,SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>, 
-    ST extends TypedVertex.Type<S,ST,SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>, 
+    S extends TypedVertex<S,ST,SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
+    ST extends TypedVertex.Type<S,ST,SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     SG extends TypedGraph<SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     // edge
-    R extends TypedEdge<S,ST,SG,R,RT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker,T,TT,TG>, 
+    R extends TypedEdge<S,ST,SG,R,RT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker,T,TT,TG>,
     RT extends TypedEdge.Type<S,ST,SG,R,RT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker,T,TT,TG>,
     // property
     P extends Property<R,RT,P,V,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>, V,
     G extends TypedGraph<G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     //tgt
-    T extends TypedVertex<T,TT,TG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>, 
+    T extends TypedVertex<T,TT,TG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     TT extends TypedVertex.Type<T,TT,TG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     TG extends TypedGraph<TG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     I extends TitanUntypedGraph
-  > 
+  >
   extends
     Default<
       S,ST,SG,
       R,RT, P,V, G,
       T,TT,TG,I
     >
-  implements 
+  implements
     Unique<
       S,ST,SG,
       R,RT, P,V, G,
       T,TT,TG,I
-    > 
+    >
   {
 
     private TitanManagement.IndexBuilder indxbldr;
@@ -271,8 +272,8 @@ extends
         isKeyThere = true;
         PropertyKey existingKey = mgmt.getPropertyKey( property.name() );
 
-        if( 
-          (existingKey.getDataType() == property.valueClass()) && 
+        if(
+          (existingKey.getDataType() == property.valueClass()) &&
           (existingKey.getCardinality() == Cardinality.SINGLE)
         ){
 
@@ -281,7 +282,7 @@ extends
         else {
 
           throw new IllegalArgumentException("The property key already exists and does not satisfy the requirements:");
-        } 
+        }
       } else {
 
         isKeyThere = false;
@@ -303,7 +304,7 @@ extends
       TitanGraphIndex alreadyThere = mgmt.getGraphIndex(name());
 
       if( alreadyThere != null && isKeyThere != null ) {
-        
+
         Boolean theExistingIndexIsOk = true;
         // // uh oh the index is there, checking times
         // Boolean theExistingIndexIsOk =  alreadyThere.isUnique()                         &&
@@ -342,17 +343,17 @@ extends
 
   final class DefaultList <
     // src
-    S extends TypedVertex<S,ST,SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>, 
-    ST extends TypedVertex.Type<S,ST,SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>, 
+    S extends TypedVertex<S,ST,SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
+    ST extends TypedVertex.Type<S,ST,SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     SG extends TypedGraph<SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     // edge
-    R extends TypedEdge<S,ST,SG,R,RT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker,T,TT,TG>, 
+    R extends TypedEdge<S,ST,SG,R,RT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker,T,TT,TG>,
     RT extends TypedEdge.Type<S,ST,SG,R,RT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker,T,TT,TG>,
     // property
     P extends Property<R,RT,P,V,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>, V,
     G extends TypedGraph<G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     //tgt
-    T extends TypedVertex<T,TT,TG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>, 
+    T extends TypedVertex<T,TT,TG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     TT extends TypedVertex.Type<T,TT,TG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     TG extends TypedGraph<TG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     I extends TitanUntypedGraph
@@ -362,8 +363,8 @@ extends
       S,ST,SG,
       R,RT, P,V, G,
       T,TT,TG,I
-    > 
-  implements 
+    >
+  implements
     List<
       S,ST,SG,
       R,RT, P,V, G,
@@ -423,7 +424,7 @@ extends
       TitanGraphIndex alreadyThere = mgmt.getGraphIndex(name());
 
       if( alreadyThere != null ) {
-        
+
         Boolean theExistingIndexIsOk = true;
         // // uh oh the index is there, checking times
         // Boolean theExistingIndexIsOk =  alreadyThere.getFieldKeys().length == 1         &&

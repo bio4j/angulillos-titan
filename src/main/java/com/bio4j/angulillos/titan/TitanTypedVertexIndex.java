@@ -20,8 +20,8 @@ public interface TitanTypedVertexIndex <
   P extends Property<N,NT,P,V,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>, V,
   G extends TypedGraph<G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
   I extends TitanUntypedGraph
-> 
-extends 
+>
+extends
   TypedVertexIndex<N,NT,P,V, G, I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>
 {
 
@@ -37,8 +37,8 @@ extends
     P extends Property<N,NT,P,V,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>, V,
     G extends TypedGraph<G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     I extends TitanUntypedGraph
-  > 
-  implements 
+  >
+  implements
     TitanTypedVertexIndex<N,NT,P,V,G,I>
   {
 
@@ -74,14 +74,15 @@ extends
     @Override
     public G graph() { return graph; }
 
-    @Override public Stream<N> query(com.tinkerpop.blueprints.Compare predicate, V value) {
+    @Override public Stream<N> query(V value) {
 
       NT elmt = property.elementType();
 
       Stream<N> strm = stream( graph().raw().titanGraph()
         .query().has(
           property.name(),
-          predicate,
+          // FIXME: not sure that we want to query only by value
+          // predicate,
           value
         )
         .has("label", vertexType().name())
@@ -103,7 +104,7 @@ extends
             return vs;
           }
       );
-          
+
 
       return strm;
     }
@@ -115,13 +116,13 @@ extends
     P extends Property<N,NT,P,V,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>, V,
     G extends TypedGraph<G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     I extends TitanUntypedGraph
-  > 
+  >
   extends
     TitanTypedVertexIndex<N,NT,P,V,G,I>,
     TypedVertexIndex.Unique<N,NT,P,V,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>
   {
 
-    default String name() { 
+    default String name() {
 
       return vertexType().name() +":"+ property().name() +":"+ "UNIQUE";
     }
@@ -134,11 +135,11 @@ extends
     P extends Property<N,NT,P,V,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>, V,
     G extends TypedGraph<G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     I extends TitanUntypedGraph
-  > 
+  >
   extends
-    Default<N,NT,P,V,G,I> 
-  implements 
-    TitanTypedVertexIndex.Unique<N,NT,P,V,G,I> 
+    Default<N,NT,P,V,G,I>
+  implements
+    TitanTypedVertexIndex.Unique<N,NT,P,V,G,I>
   {
 
     private TitanManagement.IndexBuilder indxbldr;
@@ -167,8 +168,8 @@ extends
         isKeyThere = true;
         PropertyKey existingKey = mgmt.getPropertyKey( property.name() );
 
-        if( 
-          (existingKey.getDataType() == property.valueClass()) && 
+        if(
+          (existingKey.getDataType() == property.valueClass()) &&
           (existingKey.getCardinality() == Cardinality.SINGLE)
         ){
 
@@ -177,7 +178,7 @@ extends
         else {
 
           throw new IllegalArgumentException("The property key already exists and does not satisfy the requirements");
-        } 
+        }
       } else {
 
         isKeyThere = false;
@@ -193,7 +194,7 @@ extends
       TitanGraphIndex alreadyThere = mgmt.getGraphIndex(this.name());
 
       if( alreadyThere != null && isKeyThere != null ) {
-        
+
         Boolean theExistingIndexIsOk = true;
         // uh oh the index is there, checking times
         // Boolean theExistingIndexIsOk =  alreadyThere.isUnique()                           &&
@@ -238,13 +239,13 @@ extends
     P extends Property<N,NT,P,V,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>, V,
     G extends TypedGraph<G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     I extends TitanUntypedGraph
-  > 
+  >
   extends
     TitanTypedVertexIndex<N,NT,P,V,G,I>,
     TypedVertexIndex.List<N,NT,P,V,G, I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>
   {
 
-    default String name() { 
+    default String name() {
 
       return this.vertexType().name() +":"+ this.property().name() +":"+ "LIST";
     }
@@ -256,11 +257,11 @@ extends
     P extends Property<N,NT,P,V,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>, V,
     G extends TypedGraph<G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     I extends TitanUntypedGraph
-  > 
+  >
   extends
     Default<N,NT,P,V,G,I>
-  implements 
-    TitanTypedVertexIndex.List<N,NT,P,V,G,I> 
+  implements
+    TitanTypedVertexIndex.List<N,NT,P,V,G,I>
   {
 
     private TitanManagement.IndexBuilder indxbldr;
@@ -316,7 +317,7 @@ extends
       TitanGraphIndex alreadyThere = mgmt.getGraphIndex(name());
 
       if( alreadyThere != null ) {
-        
+
         Boolean theExistingIndexIsOk = true;
         // uh oh the index is there, checking times
         // Boolean theExistingIndexIsOk =  alreadyThere.getFieldKeys().length == 1         &&
