@@ -206,14 +206,30 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabelM
       .directed();
 
     // define the arity
-    // FIXME:
-    // switch (relationshipType.arity()) {
-    //
-    //   case oneToOne:    labelMaker.multiplicity(Multiplicity.ONE2ONE);
-    //   case oneToMany:   labelMaker.multiplicity(Multiplicity.ONE2MANY);
-    //   case manyToOne:   labelMaker.multiplicity(Multiplicity.MANY2ONE);
-    //   case manyToMany:  labelMaker.multiplicity(Multiplicity.MULTI);
-    // }
+    // one/atMostOne -> ONE
+    // atLeastOne/any -> MANY
+    switch (relationshipType.arity()) {
+
+      case oneToOne:               labelMaker.multiplicity(Multiplicity.ONE2ONE);
+      case oneToAtMostOne:         labelMaker.multiplicity(Multiplicity.ONE2ONE);
+      case oneToAtLeastOne:        labelMaker.multiplicity(Multiplicity.ONE2MANY);
+      case oneToAny:               labelMaker.multiplicity(Multiplicity.ONE2MANY);
+
+      case atMostOneToOne:         labelMaker.multiplicity(Multiplicity.ONE2ONE);
+      case atMostOneToAtMostOne:   labelMaker.multiplicity(Multiplicity.ONE2ONE);
+      case atMostOneToAtLeastOne:  labelMaker.multiplicity(Multiplicity.ONE2MANY);
+      case atMostOneToAny:         labelMaker.multiplicity(Multiplicity.ONE2MANY);
+
+      case atLeastOneToOne:        labelMaker.multiplicity(Multiplicity.MANY2ONE);
+      case atLeastOneToAtMostOne:  labelMaker.multiplicity(Multiplicity.MANY2ONE);
+      case atLeastOneToAtLeastOne: labelMaker.multiplicity(Multiplicity.MULTI);
+      case atLeastOneToAny:        labelMaker.multiplicity(Multiplicity.MULTI);
+
+      case anyToOne:               labelMaker.multiplicity(Multiplicity.MANY2ONE);
+      case anyToAtMostOne:         labelMaker.multiplicity(Multiplicity.MANY2ONE);
+      case anyToAtLeastOne:        labelMaker.multiplicity(Multiplicity.MULTI);
+      case anyToAny:               labelMaker.multiplicity(Multiplicity.MULTI);
+    }
 
     return labelMaker;
   }
