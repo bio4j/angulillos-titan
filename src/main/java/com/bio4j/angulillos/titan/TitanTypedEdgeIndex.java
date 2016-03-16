@@ -3,16 +3,19 @@ package com.bio4j.angulillos.titan;
 import com.bio4j.angulillos.*;
 
 import static com.bio4j.angulillos.conversions.*;
+import static com.bio4j.angulillos.titan.TitanPredicatesConversion.*;
 
-import com.thinkaurelius.titan.core.attribute.Cmp;
 import com.thinkaurelius.titan.core.*;
-import com.thinkaurelius.titan.core.schema.*;
 import com.thinkaurelius.titan.core.schema.*;
 
 import java.util.stream.Stream;
 import java.util.Optional;
 import java.util.Iterator;
+import java.util.Collection;
+
+// FIXME: is this really needed?
 import com.tinkerpop.blueprints.Edge;
+
 
 public interface TitanTypedEdgeIndex <
   // src
@@ -178,41 +181,31 @@ extends
     public G graph() { return graph; }
 
     @Override
-    public Stream<R> query(V value) {
+    public Stream<R> query(QueryPredicate.Compare predicate, V value) {
 
-      // uh oh could be null
-      RT elmt = property.elementType();
-
-      Stream<R> strm = stream( graph().raw().titanGraph()
-        .query().has(
-          property.name(),
-          // FIXME: not sure that we want to query only by value
-          // predicate,
-          value
-        )
-        .has("label", edgeType().name())
-        .edges()
-      )
-      .flatMap(
-
-        e -> {
-
-          Stream<R> es;
-
-          if ( e != null ) {
-
-            es = Stream.of( elmt.from( (TitanEdge) e ) );
-          }
-          else {
-
-            es = Stream.empty();
-          }
-
-          return es;
-        }
+      return stream(
+        graph().raw().titanGraph()
+          .query()
+          .has("label", edgeType().name())
+          .has(property.name(), toTitanCmp(predicate), value)
+          .edges()
+      ).map( e ->
+        edgeType().from( (TitanEdge) e )
       );
+    }
 
-      return strm;
+    @Override
+    public Stream<R> query(QueryPredicate.Contain predicate, Collection<V> values) {
+
+      return stream(
+        graph().raw().titanGraph()
+          .query()
+          .has("label", edgeType().name())
+          .has(property.name(), toTitanContain(predicate), values)
+          .edges()
+      ).map( e ->
+        edgeType().from( (TitanEdge) e )
+      );
     }
   }
 

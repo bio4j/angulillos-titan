@@ -206,13 +206,14 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabelM
       .directed();
 
     // define the arity
-    switch (relationshipType.arity()) {
-
-      case oneToOne:    labelMaker.multiplicity(Multiplicity.ONE2ONE);
-      case oneToMany:   labelMaker.multiplicity(Multiplicity.ONE2MANY);
-      case manyToOne:   labelMaker.multiplicity(Multiplicity.MANY2ONE);
-      case manyToMany:  labelMaker.multiplicity(Multiplicity.MULTI);
-    }
+    // FIXME:
+    // switch (relationshipType.arity()) {
+    //
+    //   case oneToOne:    labelMaker.multiplicity(Multiplicity.ONE2ONE);
+    //   case oneToMany:   labelMaker.multiplicity(Multiplicity.ONE2MANY);
+    //   case manyToOne:   labelMaker.multiplicity(Multiplicity.MANY2ONE);
+    //   case manyToMany:  labelMaker.multiplicity(Multiplicity.MULTI);
+    // }
 
     return labelMaker;
   }

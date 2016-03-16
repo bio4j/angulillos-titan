@@ -3,6 +3,7 @@ package com.bio4j.angulillos.titan;
 import com.bio4j.angulillos.*;
 
 import static com.bio4j.angulillos.conversions.*;
+import static com.bio4j.angulillos.titan.TitanPredicatesConversion.*;
 
 import com.thinkaurelius.titan.core.attribute.Cmp;
 import com.thinkaurelius.titan.core.*;
@@ -12,7 +13,10 @@ import com.thinkaurelius.titan.core.schema.*;
 import java.util.Optional;
 import java.util.stream.Stream;
 import java.util.Iterator;
+import java.util.Collection;
+
 import com.tinkerpop.blueprints.Vertex;
+
 
 public interface TitanTypedVertexIndex <
   N extends TypedVertex<N,NT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
@@ -62,51 +66,43 @@ extends
     protected TitanGraphIndex raw;
     protected G graph;
     protected P property;
-    protected NT vertexType;
 
     public P property() { return this.property; }
 
     @Override
     public TitanGraphIndex raw() { return raw; }
 
-    public NT vertexType() { return this.vertexType; }
+    public NT vertexType() { return property().elementType(); }
 
     @Override
     public G graph() { return graph; }
 
-    @Override public Stream<N> query(V value) {
+    @Override
+    public Stream<N> query(QueryPredicate.Compare predicate, V value) {
 
-      NT elmt = property.elementType();
-
-      Stream<N> strm = stream( graph().raw().titanGraph()
-        .query().has(
-          property.name(),
-          // FIXME: not sure that we want to query only by value
-          // predicate,
-          value
-        )
-        .has("label", vertexType().name())
-        .vertices()
-      )
-      .flatMap( v -> {
-
-          Stream<N> vs;
-
-          if ( v != null ) {
-
-            vs = Stream.of( elmt.from( (TitanVertex) v ) );
-          }
-          else {
-
-            vs = Stream.empty();
-          }
-
-            return vs;
-          }
+      return stream(
+        graph().raw().titanGraph()
+          .query()
+          .has("label", vertexType().name())
+          .has(property.name(), toTitanCmp(predicate), value)
+          .vertices()
+      ).map( v ->
+        vertexType().from( (TitanVertex) v )
       );
+    }
 
+    @Override
+    public Stream<N> query(QueryPredicate.Contain predicate, Collection<V> values) {
 
-      return strm;
+      return stream(
+        graph().raw().titanGraph()
+          .query()
+          .has("label", vertexType().name())
+          .has(property.name(), toTitanContain(predicate), values)
+          .vertices()
+      ).map( v ->
+        vertexType().from( (TitanVertex) v )
+      );
     }
   }
 
@@ -150,7 +146,6 @@ extends
       super(graph,property);
 
       this.property = property;
-      this.vertexType = property.elementType();
 
 
       this.mgmt = mgmt;
