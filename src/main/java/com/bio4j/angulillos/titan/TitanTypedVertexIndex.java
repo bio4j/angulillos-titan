@@ -10,6 +10,7 @@ import com.thinkaurelius.titan.core.*;
 import com.thinkaurelius.titan.core.schema.*;
 import com.thinkaurelius.titan.core.schema.*;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 import java.util.Iterator;
@@ -44,19 +45,8 @@ extends
 
     public Default(G graph, P property) {
 
-      if( graph == null ) {
-
-        throw new IllegalArgumentException("trying to create an index with a null graph");
-      }
-
-      this.graph = graph;
-
-      if( property == null ) {
-
-        throw new IllegalArgumentException("trying to create an index with a null property");
-      }
-
-      this.property = property;
+      this.graph    = Objects.requireNonNull(graph,    "trying to create an index with a null graph");
+      this.property = Objects.requireNonNull(property, "trying to create an index with a null property");
     }
 
     protected TitanGraphIndex raw;
