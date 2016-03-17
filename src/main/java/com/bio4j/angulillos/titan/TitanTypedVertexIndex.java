@@ -16,8 +16,6 @@ import java.util.stream.Stream;
 import java.util.Iterator;
 import java.util.Collection;
 
-import com.tinkerpop.blueprints.Vertex;
-
 
 public interface TitanTypedVertexIndex <
   N extends TypedVertex<N,NT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
@@ -150,8 +148,8 @@ extends
         PropertyKey existingKey = mgmt.getPropertyKey( property.name() );
 
         if(
-          (existingKey.getDataType() == property.valueClass()) &&
-          (existingKey.getCardinality() == Cardinality.SINGLE)
+          (existingKey.dataType() == property.valueClass()) &&
+          (existingKey.cardinality() == Cardinality.SINGLE)
         ){
 
           pky = existingKey;
@@ -194,10 +192,11 @@ extends
       }
 
       // at this point pky is correct whatever it is; let's retrieve it to make Titan happy
-      PropertyKey freshpky = mgmt.getPropertyKey(pky.getName());
-      this.indxbldr = mgmt.buildIndex( name(), Vertex.class )
-        .addKey(freshpky)
-        .unique();
+      PropertyKey freshpky = mgmt.getPropertyKey(pky.name());
+      this.indxbldr = mgmt.buildIndex(
+          name(),
+          org.apache.tinkerpop.gremlin.structure.Vertex.class
+        ).addKey(freshpky).unique();
     }
 
     public final void make(VertexLabel vl) {
@@ -269,7 +268,7 @@ extends
         isKeyThere = true;
         PropertyKey existingKey = mgmt.getPropertyKey( property.name() );
 
-        if( existingKey.getDataType() == property.valueClass() ) {
+        if( existingKey.dataType() == property.valueClass() ) {
 
           pky = existingKey;
         }
@@ -317,8 +316,10 @@ extends
         }
       }
 
-      indxbldr = mgmt.buildIndex( name(), Vertex.class )
-        .addKey(pky);
+      indxbldr = mgmt.buildIndex(
+          name(),
+          org.apache.tinkerpop.gremlin.structure.Vertex.class
+        ).addKey(pky);
     }
 
     private final void make(VertexLabel vl) {

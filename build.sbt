@@ -8,5 +8,5 @@ javaVersion   := "1.8"
 
 libraryDependencies ++= Seq(
   "bio4j"                   % "angulillos" % "0.6.0",
-  "com.thinkaurelius.titan" % "titan-core" % "0.5.4"
+  "com.thinkaurelius.titan" % "titan-core" % "1.0.0"
 )

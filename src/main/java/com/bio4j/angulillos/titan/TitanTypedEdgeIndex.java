@@ -14,9 +14,6 @@ import java.util.Optional;
 import java.util.Iterator;
 import java.util.Collection;
 
-// FIXME: is this really needed?
-import com.tinkerpop.blueprints.Edge;
-
 
 public interface TitanTypedEdgeIndex <
   // src
@@ -251,8 +248,8 @@ extends
         PropertyKey existingKey = mgmt.getPropertyKey( property.name() );
 
         if(
-          (existingKey.getDataType() == property.valueClass()) &&
-          (existingKey.getCardinality() == Cardinality.SINGLE)
+          (existingKey.dataType() == property.valueClass()) &&
+          (existingKey.cardinality() == Cardinality.SINGLE)
         ){
 
           pky = existingKey;
@@ -300,9 +297,10 @@ extends
         }
       }
 
-      TitanManagement.IndexBuilder indxbldr = mgmt.buildIndex( name(), Edge.class )
-        .addKey(pky)
-        .unique();
+      TitanManagement.IndexBuilder indxbldr = mgmt.buildIndex(
+          name(),
+          org.apache.tinkerpop.gremlin.structure.Edge.class
+        ).addKey(pky).unique();
     }
 
     private final void make(EdgeLabel edgeLabel) {
@@ -373,7 +371,7 @@ extends
         isKeyThere = true;
         PropertyKey existingKey = mgmt.getPropertyKey( property.name() );
 
-        if( existingKey.getDataType() == property.valueClass() ) {
+        if( existingKey.dataType() == property.valueClass() ) {
 
           pky = existingKey;
         }
@@ -421,8 +419,10 @@ extends
         }
       }
 
-      this.indxbldr = mgmt.buildIndex( name(), Edge.class )
-        .addKey(pky);
+      this.indxbldr = mgmt.buildIndex(
+          name(),
+          org.apache.tinkerpop.gremlin.structure.Edge.class
+        ).addKey(pky);
     }
 
     private final void make(EdgeLabel edgeLabel) {
