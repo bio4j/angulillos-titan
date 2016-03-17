@@ -42,11 +42,7 @@ extends
   >
 {
 
-  // TODO: add this in angulillos at the level of typed element index
-  RT edgeType();
   TitanGraphIndex raw();
-  P property();
-  String name();
 
   public static interface Unique <
     // src
@@ -170,12 +166,11 @@ extends
     protected G graph;
     protected P property;
 
+    @Override
     public P property() { return this.property; }
 
     @Override
     public TitanGraphIndex raw() { return raw; }
-
-    public RT edgeType() { return property().elementType(); }
 
     @Override
     public G graph() { return graph; }
@@ -245,6 +240,7 @@ extends
     private TitanManagement.IndexBuilder indxbldr;
     private TitanManagement mgmt;
 
+    // TODO: review this constructor
     public DefaultUnique(TitanManagement mgmt, G graph, P property) {
 
       super(graph,property);
@@ -320,9 +316,9 @@ extends
         .unique();
     }
 
-    private final void make(EdgeLabel el) {
+    private final void make(EdgeLabel edgeLabel) {
 
-      this.raw = indxbldr.indexOnly( el ).buildCompositeIndex();
+      this.raw = indxbldr.indexOnly( edgeLabel ).buildCompositeIndex();
     }
 
     public final void makeIfNotThere(EdgeLabel edgeLabel) {
@@ -368,6 +364,7 @@ extends
     private TitanManagement.IndexBuilder indxbldr;
     private TitanManagement mgmt;
 
+    // TODO: review this constructor
     public DefaultList(TitanManagement mgmt, G graph, P property) {
 
       super(graph,property);
@@ -439,9 +436,9 @@ extends
         .addKey(pky);
     }
 
-    private final void make(EdgeLabel el) {
+    private final void make(EdgeLabel edgeLabel) {
 
-      this.raw = indxbldr.indexOnly( el ).buildCompositeIndex();
+      this.raw = indxbldr.indexOnly( edgeLabel ).buildCompositeIndex();
     }
 
     public final void makeIfNotThere(EdgeLabel edgeLabel) {

@@ -29,11 +29,7 @@ extends
   TypedVertexIndex<N,NT,P,V, G, I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>
 {
 
-  // TODO: add this in angulillos at the level of typed element index
-  NT vertexType();
   TitanGraphIndex raw();
-  P property();
-  String name();
 
   public static abstract class Default <
     N extends TypedVertex<N,NT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
@@ -67,12 +63,11 @@ extends
     protected G graph;
     protected P property;
 
+    @Override
     public P property() { return this.property; }
 
     @Override
     public TitanGraphIndex raw() { return raw; }
-
-    public NT vertexType() { return property().elementType(); }
 
     @Override
     public G graph() { return graph; }
@@ -141,6 +136,7 @@ extends
     private TitanManagement.IndexBuilder indxbldr;
     private TitanManagement mgmt;
 
+    // TODO: review this constructor
     public DefaultUnique(TitanManagement mgmt, G graph, P property) {
 
       super(graph,property);
@@ -262,6 +258,7 @@ extends
     private TitanManagement.IndexBuilder indxbldr;
     private TitanManagement mgmt;
 
+    // TODO: review this constructor
     public DefaultList(TitanManagement mgmt, G graph, P property) {
 
       super(graph,property);
