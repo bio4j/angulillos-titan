@@ -7,20 +7,21 @@ import java.util.Optional;
 
 import com.bio4j.angulillos.*;
 import static com.bio4j.angulillos.conversions.*;
+
 import com.thinkaurelius.titan.core.*;
 import com.thinkaurelius.titan.core.schema.*;
-import com.tinkerpop.blueprints.Edge;
+
+import org.apache.tinkerpop.gremlin.structure.Direction;
+
 
 public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker> {
 
 
   // TitanGraphQuery<? extends TitanGraphQuery> query();
   TitanGraph titanGraph();
-  default TitanManagement managementSystem() { return titanGraph().getManagementSystem(); }
+  default TitanManagement managementSystem() { return titanGraph().openManagement(); }
 
-  default void commit() { titanGraph().commit(); }
-
-  default void shutdown() { titanGraph().commit(); titanGraph().shutdown(); }
+  default void close() { titanGraph().close(); }
 
   @Override
   default TitanEdge addEdge(TitanVertex from, EdgeLabelMaker edgeType, TitanVertex to) {
@@ -31,79 +32,90 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabelM
   @Override
   default TitanVertex addVertex(VertexLabelMaker type) {
 
-    return (TitanVertex) titanGraph().addVertexWithLabel(type.getName());
+    return (TitanVertex) titanGraph().addVertex(type.getName());
   }
 
   @Override
   default <V> V getPropertyV(TitanVertex vertex, String property) {
 
-    return vertex.<V>getProperty(property);
+    return vertex.<V>property(property).value();
   }
 
   @Override
   default <V> void setPropertyV(TitanVertex vertex, String property, V value) {
 
-    vertex.setProperty(property, value);
+    vertex.property(property, value);
   }
 
   @Override
   default <V> V getPropertyE(TitanEdge edge, String property) {
 
-    return edge.<V>getProperty(property);
+    return edge.<V>property(property).value();
   }
 
   @Override
   default <V> void setPropertyE(TitanEdge edge, String property, V value) {
 
-    edge.setProperty(property, value);
+    edge.property(property, value);
   }
 
   @Override
   default TitanVertex source(TitanEdge edge) {
 
-    return edge.getVertex(com.tinkerpop.blueprints.Direction.OUT);
+    return edge.outVertex();
   }
 
   @Override
   default TitanVertex target(TitanEdge edge) {
 
-    return edge.getVertex(com.tinkerpop.blueprints.Direction.IN);
+    return edge.inVertex();
   }
 
   @Override
   default Stream<TitanEdge> outE(TitanVertex vertex, EdgeLabelMaker edgeType) {
 
-    Iterable<Edge> itb = vertex.getEdges(com.tinkerpop.blueprints.Direction.OUT, edgeType.getName());
-
-    return stream( itb ).map( e -> (TitanEdge) e);
+    return stream(
+      vertex.query()
+        .labels(edgeType.getName())
+        .direction(Direction.OUT)
+        .edges()
+    );
   }
 
   @Override
   default Stream<TitanVertex> outV(TitanVertex vertex, EdgeLabelMaker edgeType) {
 
-    Iterable<Edge> itb = vertex.getEdges(com.tinkerpop.blueprints.Direction.OUT, edgeType.getName());
-
-    return stream( itb ).map( e -> ((TitanEdge) e).getVertex(com.tinkerpop.blueprints.Direction.IN) );
+    return stream(
+      vertex.query()
+        .labels(edgeType.getName())
+        .direction(Direction.OUT)
+        .vertices()
+    );
   }
 
   @Override
   default Stream<TitanEdge> inE(TitanVertex vertex, EdgeLabelMaker edgeType) {
 
-    Iterable<Edge> itb = vertex.getEdges(com.tinkerpop.blueprints.Direction.IN, edgeType.getName());
-
-    return stream( itb ).map(e -> (TitanEdge) e);
+    return stream(
+      vertex.query()
+        .labels(edgeType.getName())
+        .direction(Direction.IN)
+        .edges()
+    );
   }
 
   @Override
   default Stream<TitanVertex> inV(TitanVertex vertex, EdgeLabelMaker edgeType) {
 
-    Iterable<Edge> itb = vertex.getEdges(com.tinkerpop.blueprints.Direction.IN, edgeType.getName());
-
-    return stream( itb ).map( e -> ((TitanEdge) e).getVertex(com.tinkerpop.blueprints.Direction.OUT) );
+    return stream(
+      vertex.query()
+        .labels(edgeType.getName())
+        .direction(Direction.IN)
+        .vertices()
+    );
   }
 
 
-  // create types
   /*
     creates a key in the graph using the provided `KeyMaker` and `name` if there is no such `PropertyKey` with that `name`; otherwise it returns the existing `PropertyKey` with the provided `name`.
 
