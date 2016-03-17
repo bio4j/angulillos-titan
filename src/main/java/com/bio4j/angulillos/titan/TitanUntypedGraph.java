@@ -17,11 +17,14 @@ import org.apache.tinkerpop.gremlin.structure.Direction;
 public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker> {
 
 
-  // TitanGraphQuery<? extends TitanGraphQuery> query();
   TitanGraph titanGraph();
+
   default TitanManagement managementSystem() { return titanGraph().openManagement(); }
 
-  default void close() { titanGraph().close(); }
+  default void commit() { titanGraph().tx().commit(); }
+
+  default void shutdown() { titanGraph().close(); }
+
 
   @Override
   default TitanEdge addEdge(TitanVertex from, EdgeLabelMaker edgeType, TitanVertex to) {
