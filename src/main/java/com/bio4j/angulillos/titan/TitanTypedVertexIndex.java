@@ -117,8 +117,8 @@ extends
     TitanTypedVertexIndex.Unique<N,NT,P,V,G,I>
   {
 
-    private TitanManagement.IndexBuilder indxbldr;
-    private TitanManagement mgmt;
+    private final TitanManagement.IndexBuilder indxbldr;
+    private final TitanManagement mgmt;
 
     // TODO: review this constructor
     public DefaultUnique(TitanManagement mgmt, G graph, P property) {
@@ -240,8 +240,8 @@ extends
     TitanTypedVertexIndex.List<N,NT,P,V,G,I>
   {
 
-    private TitanManagement.IndexBuilder indxbldr;
-    private TitanManagement mgmt;
+    private final TitanManagement.IndexBuilder indxbldr;
+    private final TitanManagement mgmt;
 
     // TODO: review this constructor
     public DefaultList(TitanManagement mgmt, G graph, P property) {

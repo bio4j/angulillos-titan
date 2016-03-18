@@ -221,8 +221,9 @@ extends
     >
   {
 
+    // FIXME: this should be set final after refactoring the constructor
     private TitanManagement.IndexBuilder indxbldr;
-    private TitanManagement mgmt;
+    private final TitanManagement mgmt;
 
     // TODO: review this constructor
     public DefaultUnique(TitanManagement mgmt, G graph, P property) {
@@ -346,8 +347,8 @@ extends
     >
   {
 
-    private TitanManagement.IndexBuilder indxbldr;
-    private TitanManagement mgmt;
+    private final TitanManagement.IndexBuilder indxbldr;
+    private final TitanManagement mgmt;
 
     // TODO: review this constructor
     public DefaultList(TitanManagement mgmt, G graph, P property) {
