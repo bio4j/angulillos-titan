@@ -6,6 +6,6 @@
 [![](https://img.shields.io/badge/license-AGPLv3-blue.svg)](https://tldrlegal.com/license/gnu-affero-general-public-license-v3-%28agpl-3.0%29)
 [![](https://img.shields.io/badge/contact-gitter_chat-dd1054.svg)](https://gitter.im/bio4j/angulillos-titan)
 
-This is an implementation of the [_Angulillos_](https://github.com/bio4j/angulillos) API for the [Titan](http://thinkaurelius.github.io/titan/) graph database.
+This is an implementation of the [_Angulillos_](https://github.com/bio4j/angulillos) API for the [Titan](http://titandb.io) graph database.
 
-It is used in the [Bio4j-Titan](https://github.com/bio4j/bio4j-titan) project, which implements the [Bio4](https://github.com/bio4j/bio4j) graph model (defined using _Angulillos_) for the [TitanDB](http://titandb.io) backend.
+It is used in the [Bio4j-Titan](https://github.com/bio4j/bio4j-titan) project, which implements the [Bio4](https://github.com/bio4j/bio4j) graph model (defined using _Angulillos_) for the Titan backend.
