@@ -242,6 +242,8 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabelM
       case anyToAtMostOne:         labelMaker.multiplicity(Multiplicity.MANY2ONE);
       case anyToAtLeastOne:        labelMaker.multiplicity(Multiplicity.MULTI);
       case anyToAny:               labelMaker.multiplicity(Multiplicity.MULTI);
+
+      default:                     labelMaker.multiplicity(Multiplicity.MULTI);
     }
 
     return labelMaker;
