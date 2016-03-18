@@ -221,8 +221,7 @@ extends
     >
   {
 
-    // FIXME: this should be set final after refactoring the constructor
-    private TitanManagement.IndexBuilder indxbldr;
+    private final TitanManagement.IndexBuilder indxbldr;
     private final TitanManagement mgmt;
 
     // TODO: review this constructor
@@ -296,10 +295,10 @@ extends
         }
       }
 
-      TitanManagement.IndexBuilder indxbldr = mgmt.buildIndex(
-          name(),
-          org.apache.tinkerpop.gremlin.structure.Edge.class
-        ).addKey(pky).unique();
+      this.indxbldr = mgmt.buildIndex(
+        name(),
+        org.apache.tinkerpop.gremlin.structure.Edge.class
+      ).addKey(pky).unique();
     }
 
     private final void make(EdgeLabel edgeLabel) {
