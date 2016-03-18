@@ -40,7 +40,7 @@ extends
 
   TitanGraphIndex raw();
 
-  public static interface Unique <
+  interface Unique <
     // src
     S extends TypedVertex<S,ST,SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     ST extends TypedVertex.Type<S,ST,SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
@@ -77,7 +77,7 @@ extends
     }
   }
 
-  public static interface List <
+  interface List <
     // src
     S extends TypedVertex<S,ST,SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     ST extends TypedVertex.Type<S,ST,SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
@@ -115,7 +115,7 @@ extends
 
   }
 
-  public static abstract class Default <
+  abstract class Default <
     // src
     S extends TypedVertex<S,ST,SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     ST extends TypedVertex.Type<S,ST,SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
@@ -190,7 +190,7 @@ extends
 
 
   /* Default implementation of a relationship unique index */
-  public final class DefaultUnique <
+  final class DefaultUnique <
     // src
     S extends TypedVertex<S,ST,SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     ST extends TypedVertex.Type<S,ST,SG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
