@@ -1,17 +1,15 @@
 package com.bio4j.angulillos.titan;
 
-import java.util.stream.Stream;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
-
 import com.bio4j.angulillos.*;
+
 import static com.bio4j.angulillos.conversions.*;
 
 import com.thinkaurelius.titan.core.*;
 import com.thinkaurelius.titan.core.schema.*;
 
 import org.apache.tinkerpop.gremlin.structure.Direction;
+
+import java.util.stream.Stream;
 
 
 public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker> {
@@ -192,9 +190,7 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabelM
   VertexLabelMaker titanLabelMakerForVertexType(TitanManagement mgmt, NT vertexType) {
 
     // TODO: evaluate partition() and setStatic()
-    VertexLabelMaker labelMaker = mgmt.makeVertexLabel(vertexType.name());
-
-    return labelMaker;
+    return mgmt.makeVertexLabel(vertexType.name());
   }
 
   /*
@@ -217,33 +213,34 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabelM
   >
   EdgeLabelMaker titanLabelMakerForEdgeType(TitanManagement mgmt, RT relationshipType) {
 
-    EdgeLabelMaker labelMaker = mgmt.makeEdgeLabel(relationshipType.name())
-      .directed();
+    EdgeLabelMaker labelMaker = mgmt.makeEdgeLabel(relationshipType.name()).directed();
 
-    // define the arity
+    // set the arity
     // one/atMostOne -> ONE
     // atLeastOne/any -> MANY
     switch (relationshipType.arity()) {
 
-      case oneToOne:               labelMaker.multiplicity(Multiplicity.ONE2ONE);
-      case oneToAtMostOne:         labelMaker.multiplicity(Multiplicity.ONE2ONE);
-      case oneToAtLeastOne:        labelMaker.multiplicity(Multiplicity.ONE2MANY);
-      case oneToAny:               labelMaker.multiplicity(Multiplicity.ONE2MANY);
+      case oneToOne:               labelMaker.multiplicity(Multiplicity.ONE2ONE); break;
+      case oneToAtMostOne:         labelMaker.multiplicity(Multiplicity.ONE2ONE); break;
+      case oneToAtLeastOne:        labelMaker.multiplicity(Multiplicity.ONE2MANY); break;
+      case oneToAny:               labelMaker.multiplicity(Multiplicity.ONE2MANY); break;
 
-      case atMostOneToOne:         labelMaker.multiplicity(Multiplicity.ONE2ONE);
-      case atMostOneToAtMostOne:   labelMaker.multiplicity(Multiplicity.ONE2ONE);
-      case atMostOneToAtLeastOne:  labelMaker.multiplicity(Multiplicity.ONE2MANY);
-      case atMostOneToAny:         labelMaker.multiplicity(Multiplicity.ONE2MANY);
+      case atMostOneToOne:         labelMaker.multiplicity(Multiplicity.ONE2ONE); break;
+      case atMostOneToAtMostOne:   labelMaker.multiplicity(Multiplicity.ONE2ONE); break;
+      case atMostOneToAtLeastOne:  labelMaker.multiplicity(Multiplicity.ONE2MANY); break;
+      case atMostOneToAny:         labelMaker.multiplicity(Multiplicity.ONE2MANY); break;
 
-      case atLeastOneToOne:        labelMaker.multiplicity(Multiplicity.MANY2ONE);
-      case atLeastOneToAtMostOne:  labelMaker.multiplicity(Multiplicity.MANY2ONE);
-      case atLeastOneToAtLeastOne: labelMaker.multiplicity(Multiplicity.MULTI);
-      case atLeastOneToAny:        labelMaker.multiplicity(Multiplicity.MULTI);
+      case atLeastOneToOne:        labelMaker.multiplicity(Multiplicity.MANY2ONE); break;
+      case atLeastOneToAtMostOne:  labelMaker.multiplicity(Multiplicity.MANY2ONE); break;
+      case atLeastOneToAtLeastOne: labelMaker.multiplicity(Multiplicity.MULTI); break;
+      case atLeastOneToAny:        labelMaker.multiplicity(Multiplicity.MULTI); break;
 
-      case anyToOne:               labelMaker.multiplicity(Multiplicity.MANY2ONE);
-      case anyToAtMostOne:         labelMaker.multiplicity(Multiplicity.MANY2ONE);
-      case anyToAtLeastOne:        labelMaker.multiplicity(Multiplicity.MULTI);
-      case anyToAny:               labelMaker.multiplicity(Multiplicity.MULTI);
+      case anyToOne:               labelMaker.multiplicity(Multiplicity.MANY2ONE); break;
+      case anyToAtMostOne:         labelMaker.multiplicity(Multiplicity.MANY2ONE); break;
+      case anyToAtLeastOne:        labelMaker.multiplicity(Multiplicity.MULTI); break;
+      case anyToAny:               labelMaker.multiplicity(Multiplicity.MULTI); break;
+
+      default:                     labelMaker.multiplicity(Multiplicity.MULTI);
     }
 
     return labelMaker;
@@ -266,13 +263,9 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabelM
     TT extends TypedVertex.Type<T,TT,TG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     TG extends TypedGraph<TG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>
   >
-  EdgeLabelMaker titanLabelMakerForEdgeTypeWithProperties(TitanManagement mgmt, RT edgeType, PropertyKey[] propertyKeys) {
+  EdgeLabelMaker titanLabelMakerForEdgeTypeWithProperties(TitanManagement mgmt, RT edgeType, PropertyKey... propertyKeys) {
 
-    // get the EdgeLabelMaker
-    EdgeLabelMaker lblmkr = titanLabelMakerForEdgeType(mgmt, edgeType);
-
-    lblmkr.signature(propertyKeys);
-    return lblmkr;
+    return titanLabelMakerForEdgeType(mgmt, edgeType).signature(propertyKeys);
   }
 
   /*
@@ -309,9 +302,7 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabelM
   >
   PropertyKeyMaker titanPropertyMakerForVertexProperty(TitanManagement mgmt, P property) {
 
-    PropertyKeyMaker pkm = mgmt.makePropertyKey(property.name()).dataType(property.valueClass());
-
-    return pkm;
+    return mgmt.makePropertyKey(property.name()).dataType(property.valueClass());
   }
 
   default <
@@ -333,9 +324,7 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabelM
   >
   PropertyKeyMaker titanPropertyMakerForEdgeProperty(TitanManagement mgmt, P property) {
 
-    PropertyKeyMaker pkm = mgmt.makePropertyKey(property.name()).dataType(property.valueClass());
-
-    return pkm;
+    return mgmt.makePropertyKey(property.name()).dataType(property.valueClass());
   }
 
   // default <

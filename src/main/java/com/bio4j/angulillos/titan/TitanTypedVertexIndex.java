@@ -5,15 +5,11 @@ import com.bio4j.angulillos.*;
 import static com.bio4j.angulillos.conversions.*;
 import static com.bio4j.angulillos.titan.TitanPredicatesConversion.*;
 
-import com.thinkaurelius.titan.core.attribute.Cmp;
 import com.thinkaurelius.titan.core.*;
-import com.thinkaurelius.titan.core.schema.*;
 import com.thinkaurelius.titan.core.schema.*;
 
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Stream;
-import java.util.Iterator;
 import java.util.Collection;
 
 
@@ -30,7 +26,7 @@ extends
 
   TitanGraphIndex raw();
 
-  public static abstract class Default <
+  abstract class Default <
     N extends TypedVertex<N,NT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     NT extends TypedVertex.Type<N,NT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     P extends Property<N,NT,P,V,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>, V,
@@ -89,7 +85,7 @@ extends
     }
   }
 
-  public interface Unique <
+  interface Unique <
     N extends TypedVertex<N,NT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     NT extends TypedVertex.Type<N,NT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     P extends Property<N,NT,P,V,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>, V,
@@ -108,7 +104,7 @@ extends
   }
 
   /* Default implementation of a node unique index */
-  public static final class DefaultUnique <
+  final class DefaultUnique <
     N extends TypedVertex<N,NT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     NT extends TypedVertex.Type<N,NT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     P extends Property<N,NT,P,V,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>, V,
@@ -121,8 +117,8 @@ extends
     TitanTypedVertexIndex.Unique<N,NT,P,V,G,I>
   {
 
-    private TitanManagement.IndexBuilder indxbldr;
-    private TitanManagement mgmt;
+    private final TitanManagement.IndexBuilder indxbldr;
+    private final TitanManagement mgmt;
 
     // TODO: review this constructor
     public DefaultUnique(TitanManagement mgmt, G graph, P property) {
@@ -213,7 +209,7 @@ extends
     }
   }
 
-  public static interface List <
+  interface List <
     N extends TypedVertex<N,NT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     NT extends TypedVertex.Type<N,NT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     P extends Property<N,NT,P,V,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>, V,
@@ -231,7 +227,7 @@ extends
     }
   }
 
-  public static final class DefaultList <
+  final class DefaultList <
     N extends TypedVertex<N,NT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     NT extends TypedVertex.Type<N,NT,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     P extends Property<N,NT,P,V,G,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>, V,
@@ -244,8 +240,8 @@ extends
     TitanTypedVertexIndex.List<N,NT,P,V,G,I>
   {
 
-    private TitanManagement.IndexBuilder indxbldr;
-    private TitanManagement mgmt;
+    private final TitanManagement.IndexBuilder indxbldr;
+    private final TitanManagement mgmt;
 
     // TODO: review this constructor
     public DefaultList(TitanManagement mgmt, G graph, P property) {

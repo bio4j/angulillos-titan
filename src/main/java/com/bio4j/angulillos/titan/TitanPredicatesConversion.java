@@ -1,6 +1,6 @@
 package com.bio4j.angulillos.titan;
 
-import com.bio4j.angulillos.*;
+import com.bio4j.angulillos.QueryPredicate;
 
 import com.thinkaurelius.titan.core.attribute.Cmp;
 import com.thinkaurelius.titan.core.attribute.Contain;
