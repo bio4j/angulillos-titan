@@ -1,17 +1,15 @@
 package com.bio4j.angulillos.titan;
 
-import java.util.stream.Stream;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
-
 import com.bio4j.angulillos.*;
+
 import static com.bio4j.angulillos.conversions.*;
 
 import com.thinkaurelius.titan.core.*;
 import com.thinkaurelius.titan.core.schema.*;
 
 import org.apache.tinkerpop.gremlin.structure.Direction;
+
+import java.util.stream.Stream;
 
 
 public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker> {

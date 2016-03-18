@@ -10,8 +10,6 @@ import com.thinkaurelius.titan.core.schema.*;
 
 import java.util.stream.Stream;
 import java.util.Objects;
-import java.util.Optional;
-import java.util.Iterator;
 import java.util.Collection;
 
 
