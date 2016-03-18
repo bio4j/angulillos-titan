@@ -190,9 +190,7 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabelM
   VertexLabelMaker titanLabelMakerForVertexType(TitanManagement mgmt, NT vertexType) {
 
     // TODO: evaluate partition() and setStatic()
-    VertexLabelMaker labelMaker = mgmt.makeVertexLabel(vertexType.name());
-
-    return labelMaker;
+    return mgmt.makeVertexLabel(vertexType.name());
   }
 
   /*
@@ -265,13 +263,9 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabelM
     TT extends TypedVertex.Type<T,TT,TG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>,
     TG extends TypedGraph<TG,I,TitanVertex,VertexLabelMaker,TitanEdge,EdgeLabelMaker>
   >
-  EdgeLabelMaker titanLabelMakerForEdgeTypeWithProperties(TitanManagement mgmt, RT edgeType, PropertyKey[] propertyKeys) {
+  EdgeLabelMaker titanLabelMakerForEdgeTypeWithProperties(TitanManagement mgmt, RT edgeType, PropertyKey... propertyKeys) {
 
-    // get the EdgeLabelMaker
-    EdgeLabelMaker lblmkr = titanLabelMakerForEdgeType(mgmt, edgeType);
-
-    lblmkr.signature(propertyKeys);
-    return lblmkr;
+    return titanLabelMakerForEdgeType(mgmt, edgeType).signature(propertyKeys);
   }
 
   /*
@@ -308,9 +302,7 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabelM
   >
   PropertyKeyMaker titanPropertyMakerForVertexProperty(TitanManagement mgmt, P property) {
 
-    PropertyKeyMaker pkm = mgmt.makePropertyKey(property.name()).dataType(property.valueClass());
-
-    return pkm;
+    return mgmt.makePropertyKey(property.name()).dataType(property.valueClass());
   }
 
   default <
@@ -332,9 +324,7 @@ public interface TitanUntypedGraph extends UntypedGraph<TitanVertex,VertexLabelM
   >
   PropertyKeyMaker titanPropertyMakerForEdgeProperty(TitanManagement mgmt, P property) {
 
-    PropertyKeyMaker pkm = mgmt.makePropertyKey(property.name()).dataType(property.valueClass());
-
-    return pkm;
+    return mgmt.makePropertyKey(property.name()).dataType(property.valueClass());
   }
 
   // default <
