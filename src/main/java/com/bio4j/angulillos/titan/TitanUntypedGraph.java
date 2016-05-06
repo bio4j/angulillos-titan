@@ -32,6 +32,11 @@ implements
   @Override
   public void shutdown() { titanGraph().close(); }
 
+  @Override
+  public void rollback() {
+    // titanGraph().rollback();
+  }
+
 
   @Override
   public TitanEdge addEdge(TitanVertex source, String edgeLabel, TitanVertex target) {
@@ -120,82 +125,5 @@ implements
         .vertices()
     );
   }
-
-
-  /* ### Creating types in the TitanGraph Management System
-
-     These methods create a key in the graph using the provided label or just return it if it already exists.
-  */
-  public VertexLabel createOrGetVertexType(TitanManagement mgmt, String vertexLabel) {
-
-    return Optional.ofNullable(
-      mgmt.getVertexLabel(vertexLabel)
-    ).orElse(
-      // TODO: evaluate partition() and setStatic()
-      mgmt.makeVertexLabel(vertexLabel).make()
-    );
-  }
-
-  public EdgeLabel createOrGetEdgeType(TitanManagement mgmt, String edgeLabel) {
-
-    return Optional.ofNullable(
-      mgmt.getEdgeLabel(edgeLabel)
-    ).orElse(
-      mgmt.makeEdgeLabel(edgeLabel).directed().make()
-    );
-  }
-
-  public PropertyKey createOrGetPropertyType(TitanManagement mgmt, String propertyLabel) {
-
-    return Optional.ofNullable(
-      mgmt.getPropertyKey(propertyLabel)
-    ).orElse(
-      mgmt.makePropertyKey(propertyLabel).make()
-    );
-  }
-
-
-
-  // /*
-  // Get a `VertexLabelMaker` for a vertex type
-  // */
-  // VertexLabelMaker titanLabelMakerForVertexType(TitanManagement mgmt, NT vertexType) {
-  //
-  //   return mgmt.makeVertexLabel(vertexType.name());
-  // }
-
-  // /*
-  // Create a `LabelMaker` with the minimum defaults (name, arity and directed) for an edge type. As this is a `LabelMaker`, you can further refine it and define its signature, indexing etc.
-  // */
-  // EdgeLabelMaker titanLabelMakerForEdgeType(TitanManagement mgmt, RT relationshipType) {
-  //
-  //   return mgmt.makeEdgeLabel(relationshipType.name()).directed().multiplicity(...);;
-  // }
-  //
-  // // see http://s3.thinkaurelius.com/docs/titan/0.5.1/data-model.html#_individual_edge_layout for why you might want this
-  // default <
-  // EdgeLabelMaker titanLabelMakerForEdgeTypeWithProperties(TitanManagement mgmt, RT edgeType, PropertyKey... propertyKeys) {
-  //
-  //   return titanLabelMakerForEdgeType(mgmt, edgeType).signature(propertyKeys);
-  // }
-
-
-  // /* create an `EdgeLabel` for an type, using the default configuration. If a type with the same name is present it will be returned instead. */
-  // EdgeLabel titanLabelForEdgeType(TitanManagement mgmt, RT relationshipType) {
-  //
-  //   // TODO: check that arities etc are ok, throw if not
-  //   return createOrGet(mgmt, titanLabelMakerForEdgeType(mgmt, relationshipType));
-  // }
-
-
-  // PropertyKeyMaker titanPropertyMakerForVertexProperty(TitanManagement mgmt, P property) {
-  //
-  //   return mgmt.makePropertyKey(property.name()).dataType(property.valueClass());
-  // }
-
-  // PropertyKeyMaker titanPropertyMakerForEdgeProperty(TitanManagement mgmt, P property) {
-  //
-  //   return mgmt.makePropertyKey(property.name()).dataType(property.valueClass());
-  // }
 
 }

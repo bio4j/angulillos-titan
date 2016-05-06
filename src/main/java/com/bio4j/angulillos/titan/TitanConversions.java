@@ -1,10 +1,12 @@
 package com.bio4j.angulillos.titan;
 
 import com.bio4j.angulillos.QueryPredicate;
+import com.bio4j.angulillos.Arity;
 
 import com.thinkaurelius.titan.core.attribute.Cmp;
 import com.thinkaurelius.titan.core.attribute.Contain;
 import com.thinkaurelius.titan.core.Multiplicity;
+import com.thinkaurelius.titan.core.Cardinality;
 
 
 public final class TitanConversions {
@@ -35,34 +37,49 @@ public final class TitanConversions {
 
   }
 
-  public static final class Arity {
+  public static final class Arities {
+    // One/AtMostOne -> ONE
+    // AtLeastOne/Any -> MANY
+    // default case represents arity Any
 
-    public static final Multiplicity asTitanMultiplicity(com.bio4j.angulillos.Arity arity) {
-      // one/atMostOne -> ONE
-      // atLeastOne/any -> MANY
+    public static final Cardinality asTitanCardinality(Arity arity) {
       switch(arity) {
+        case One:       return Cardinality.SINGLE;
+        case AtMostOne: return Cardinality.SINGLE;
+        default:        return Cardinality.LIST;
+      }
+    }
 
-        case oneToOne:               return Multiplicity.ONE2ONE;
-        case oneToAtMostOne:         return Multiplicity.ONE2ONE;
-        case oneToAtLeastOne:        return Multiplicity.ONE2MANY;
-        case oneToAny:               return Multiplicity.ONE2MANY;
+    public static final Multiplicity asTitanMultiplicity(Arity fromArity, Arity toArity) {
+      switch(fromArity) {
 
-        case atMostOneToOne:         return Multiplicity.ONE2ONE;
-        case atMostOneToAtMostOne:   return Multiplicity.ONE2ONE;
-        case atMostOneToAtLeastOne:  return Multiplicity.ONE2MANY;
-        case atMostOneToAny:         return Multiplicity.ONE2MANY;
+        case One: switch (toArity) {
+          case One:        return Multiplicity.ONE2ONE;
+          case AtMostOne:  return Multiplicity.ONE2ONE;
+          case AtLeastOne: return Multiplicity.ONE2MANY;
+          default:         return Multiplicity.ONE2MANY;
+        }
 
-        case atLeastOneToOne:        return Multiplicity.MANY2ONE;
-        case atLeastOneToAtMostOne:  return Multiplicity.MANY2ONE;
-        case atLeastOneToAtLeastOne: return Multiplicity.MULTI;
-        case atLeastOneToAny:        return Multiplicity.MULTI;
+        case AtMostOne: switch (toArity) {
+          case One:        return Multiplicity.ONE2ONE;
+          case AtMostOne:  return Multiplicity.ONE2ONE;
+          case AtLeastOne: return Multiplicity.ONE2MANY;
+          default:         return Multiplicity.ONE2MANY;
+        }
 
-        case anyToOne:               return Multiplicity.MANY2ONE;
-        case anyToAtMostOne:         return Multiplicity.MANY2ONE;
-        case anyToAtLeastOne:        return Multiplicity.MULTI;
-        case anyToAny:               return Multiplicity.MULTI;
-        // NOTE: this shouldn't happen, because we pattern match on all cases of a sealed enum
-        default:                     return Multiplicity.MULTI;
+        case AtLeastOne: switch (toArity) {
+          case One:        return Multiplicity.MANY2ONE;
+          case AtMostOne:  return Multiplicity.MANY2ONE;
+          case AtLeastOne: return Multiplicity.MULTI;
+          default:         return Multiplicity.MULTI;
+        }
+
+        default: switch(toArity) {
+          case One:        return Multiplicity.MANY2ONE;
+          case AtMostOne:  return Multiplicity.MANY2ONE;
+          case AtLeastOne: return Multiplicity.MULTI;
+          default:         return Multiplicity.MULTI;
+        }
       }
     }
 
