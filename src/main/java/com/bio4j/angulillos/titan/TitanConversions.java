@@ -42,13 +42,14 @@ public final class TitanConversions {
     // AtLeastOne/Any -> MANY
     // default case represents arity Any
 
-    public static final Cardinality asTitanCardinality(Arity arity) {
-      switch(arity) {
-        case One:       return Cardinality.SINGLE;
-        case AtMostOne: return Cardinality.SINGLE;
-        default:        return Cardinality.LIST;
-      }
-    }
+    // NOTE: we don't support non-single cardinality in the angulillos API
+    // public static final Cardinality asTitanCardinality(Arity arity) {
+    //   switch(arity) {
+    //     case One:       return Cardinality.SINGLE;
+    //     case AtMostOne: return Cardinality.SINGLE;
+    //     default:        return Cardinality.LIST;
+    //   }
+    // }
 
     public static final Multiplicity asTitanMultiplicity(Arity fromArity, Arity toArity) {
       switch(fromArity) {

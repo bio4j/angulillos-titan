@@ -46,7 +46,7 @@ implements UntypedGraphSchema<SchemaManager> {
   public SchemaManager createProperty(SchemaManager schemaManager, AnyProperty property) {
     schemaManager
       .makePropertyKey(property._label())
-      .cardinality( Arities.asTitanCardinality(property.fromArity()) )
+      .cardinality( Cardinality.SINGLE )
       .dataType( property.valueClass() )
       .make();
     return schemaManager;
