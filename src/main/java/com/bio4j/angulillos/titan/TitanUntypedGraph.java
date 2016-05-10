@@ -39,40 +39,40 @@ implements
 
 
   @Override
-  public TitanEdge addEdge(TitanVertex source, String edgeLabel, TitanVertex target) {
+  public TitanEdge addEdge(TitanVertex source, AnyEdgeType edgeType, TitanVertex target) {
 
-    return source.addEdge( edgeLabel, target );
+    return source.addEdge( edgeType._label(), target );
   }
 
   @Override
-  public TitanVertex addVertex(String vertexLabel) {
+  public TitanVertex addVertex(AnyVertexType vertexType) {
 
-    return titanGraph().addVertex(vertexLabel);
+    return titanGraph().addVertex(vertexType._label());
   }
 
   @Override
-  public <V> V getPropertyV(TitanVertex vertex, String property) {
+  public <V> V getPropertyV(TitanVertex vertex, AnyProperty property) {
 
-    return vertex.<V>property(property).value();
+    return vertex.<V>property(property._label()).value();
   }
 
   @Override
-  public <V> TitanVertex setPropertyV(TitanVertex vertex, String property, V value) {
+  public <V> TitanVertex setPropertyV(TitanVertex vertex, AnyProperty property, V value) {
 
-    vertex.property(property, value);
+    vertex.property(property._label(), value);
     return vertex;
   }
 
   @Override
-  public <V> V getPropertyE(TitanEdge edge, String property) {
+  public <V> V getPropertyE(TitanEdge edge, AnyProperty property) {
 
-    return edge.<V>property(property).value();
+    return edge.<V>property(property._label()).value();
   }
 
   @Override
-  public <V> TitanEdge setPropertyE(TitanEdge edge, String property, V value) {
+  public <V> TitanEdge setPropertyE(TitanEdge edge, AnyProperty property, V value) {
 
-    edge.property(property, value);
+    edge.property(property._label(), value);
     return edge;
   }
 
@@ -83,44 +83,44 @@ implements
   public TitanVertex target(TitanEdge edge) { return edge.inVertex(); }
 
   @Override
-  public Stream<TitanEdge> outE(TitanVertex vertex, String edgeLabel) {
+  public Stream<TitanEdge> outE(TitanVertex vertex, AnyEdgeType edgeType) {
 
     return stream(
       vertex.query()
-        .labels(edgeLabel)
+        .labels(edgeType._label())
         .direction(Direction.OUT)
         .edges()
     );
   }
 
   @Override
-  public Stream<TitanVertex> outV(TitanVertex vertex, String edgeLabel) {
+  public Stream<TitanVertex> outV(TitanVertex vertex, AnyEdgeType edgeType) {
 
     return stream(
       vertex.query()
-        .labels(edgeLabel)
+        .labels(edgeType._label())
         .direction(Direction.OUT)
         .vertices()
     );
   }
 
   @Override
-  public Stream<TitanEdge> inE(TitanVertex vertex, String edgeLabel) {
+  public Stream<TitanEdge> inE(TitanVertex vertex, AnyEdgeType edgeType) {
 
     return stream(
       vertex.query()
-        .labels(edgeLabel)
+        .labels(edgeType._label())
         .direction(Direction.IN)
         .edges()
     );
   }
 
   @Override
-  public Stream<TitanVertex> inV(TitanVertex vertex, String edgeLabel) {
+  public Stream<TitanVertex> inV(TitanVertex vertex, AnyEdgeType edgeType) {
 
     return stream(
       vertex.query()
-        .labels(edgeLabel)
+        .labels(edgeType._label())
         .direction(Direction.IN)
         .vertices()
     );
