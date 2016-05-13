@@ -1,0 +1,1 @@
+This version is based on [angulillos-0.7](https://github.com/bio4j/angulillos/releases/tag/v0.7.0). Indexes code is excluded from this release.
