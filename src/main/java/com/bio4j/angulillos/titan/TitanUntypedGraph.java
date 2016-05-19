@@ -29,9 +29,15 @@ implements
 
   public TitanManagement managementSystem() { return titanGraph.openManagement(); }
 
+  /*
+    The transaction/Graph returned by this method is a thread-independent transaction; it can safely be used from different threads. See Titan transaction docs.
+  */
   @Override
   public ConcurrentTransaction beginTx() { return new ConcurrentTransaction( titanGraph.newTransaction() ); }
 
+  /*
+    This method will (try to) commit the implictly opened thread-local transaction.
+  */
   @Override
   public void commit() { titanGraph.tx().commit(); }
 
@@ -41,9 +47,15 @@ implements
   @Override
   public TitanUntypedGraph graph() { return this; }
 
+  /*
+    This method will (try to) rollback the implictly opened thread-local transaction.
+  */
   @Override
   public void rollback() { titanGraph.tx().rollback(); }
 
+  /*
+    This class wraps a global threadsafe Titan transaction; it is a TitanUntypedGraph too, as this is the Titan API design. See the Titan docs for details.
+  */
   public class ConcurrentTransaction extends TitanUntypedGraph {
 
     private final TitanTransaction rawTx;
@@ -56,13 +68,15 @@ implements
     @Override
     public final ConcurrentTransaction graph() { return this; }
 
+    /*
+      This two methods will work with *this* transaction, not the implicit one.
+    */
     @Override
     public final void commit() { rawTx.commit(); }
 
     @Override
     public void rollback() { rawTx.rollback(); }
   }
-
 
   @Override
   public TitanEdge addEdge(TitanVertex source, AnyEdgeType edgeType, TitanVertex target) {
