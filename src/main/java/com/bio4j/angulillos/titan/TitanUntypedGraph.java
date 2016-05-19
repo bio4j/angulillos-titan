@@ -15,26 +15,52 @@ import java.util.Optional;
 
 public class TitanUntypedGraph
 implements
-  UntypedGraph<TitanVertex, TitanEdge>
+  UntypedGraph.Transactional<TitanVertex, TitanEdge>,
+  UntypedGraph.Transaction<TitanVertex, TitanEdge>
 {
+
   private final TitanGraph titanGraph;
   public  final TitanGraph titanGraph() { return this.titanGraph; }
 
-  public TitanUntypedGraph(TitanGraph titanGraph) { this.titanGraph = titanGraph; }
+  public TitanUntypedGraph(TitanGraph titanGraph) {
 
+    this.titanGraph = titanGraph;
+  }
 
-  public TitanManagement managementSystem() { return titanGraph().openManagement(); }
-
-
-  @Override
-  public void commit() { titanGraph().tx().commit(); }
+  public TitanManagement managementSystem() { return titanGraph.openManagement(); }
 
   @Override
-  public void shutdown() { titanGraph().close(); }
+  public ConcurrentTransaction beginTx() { return new ConcurrentTransaction( titanGraph.newTransaction() ); }
 
   @Override
-  public void rollback() {
-    // titanGraph().rollback();
+  public void commit() { titanGraph.tx().commit(); }
+
+  @Override
+  public void shutdown() { titanGraph.close(); }
+
+  @Override
+  public TitanUntypedGraph graph() { return this; }
+
+  @Override
+  public void rollback() { titanGraph.tx().rollback(); }
+
+  public class ConcurrentTransaction extends TitanUntypedGraph {
+
+    private final TitanTransaction rawTx;
+    ConcurrentTransaction(TitanTransaction rawTx) {
+
+      super(TitanUntypedGraph.this.titanGraph);
+      this.rawTx = rawTx;
+    }
+
+    @Override
+    public final ConcurrentTransaction graph() { return this; }
+
+    @Override
+    public final void commit() { rawTx.commit(); }
+
+    @Override
+    public void rollback() { rawTx.rollback(); }
   }
 
 
@@ -125,5 +151,4 @@ implements
         .vertices()
     );
   }
-
 }
