@@ -67,9 +67,9 @@ import com.thinkaurelius.titan.core.schema.*;
 
 
 
-[main/java/com/bio4j/angulillos/titan/TitanConversions.java]: ../../../../../../main/java/com/bio4j/angulillos/titan/TitanConversions.java.md
-[main/java/com/bio4j/angulillos/titan/TitanTypedEdgeIndex.java]: ../../../../../../main/java/com/bio4j/angulillos/titan/TitanTypedEdgeIndex.java.md
-[main/java/com/bio4j/angulillos/titan/TitanTypedVertexIndex.java]: ../../../../../../main/java/com/bio4j/angulillos/titan/TitanTypedVertexIndex.java.md
-[main/java/com/bio4j/angulillos/titan/TitanUntypedGraph.java]: ../../../../../../main/java/com/bio4j/angulillos/titan/TitanUntypedGraph.java.md
-[main/java/com/bio4j/angulillos/titan/TitanUntypedSchemaManager.java]: ../../../../../../main/java/com/bio4j/angulillos/titan/TitanUntypedSchemaManager.java.md
 [test/java/com/bio4j/angulillos/titan/TitanGoGraph.java]: TitanGoGraph.java.md
+[main/java/com/bio4j/angulillos/titan/TitanConversions.java]: ../../../../../../main/java/com/bio4j/angulillos/titan/TitanConversions.java.md
+[main/java/com/bio4j/angulillos/titan/TitanTypedVertexIndex.java]: ../../../../../../main/java/com/bio4j/angulillos/titan/TitanTypedVertexIndex.java.md
+[main/java/com/bio4j/angulillos/titan/TitanUntypedSchemaManager.java]: ../../../../../../main/java/com/bio4j/angulillos/titan/TitanUntypedSchemaManager.java.md
+[main/java/com/bio4j/angulillos/titan/TitanTypedEdgeIndex.java]: ../../../../../../main/java/com/bio4j/angulillos/titan/TitanTypedEdgeIndex.java.md
+[main/java/com/bio4j/angulillos/titan/TitanUntypedGraph.java]: ../../../../../../main/java/com/bio4j/angulillos/titan/TitanUntypedGraph.java.md

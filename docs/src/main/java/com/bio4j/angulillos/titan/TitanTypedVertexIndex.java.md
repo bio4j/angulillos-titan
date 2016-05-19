@@ -344,9 +344,9 @@ Default implementation of a node unique index
 
 
 
-[main/java/com/bio4j/angulillos/titan/TitanConversions.java]: TitanConversions.java.md
-[main/java/com/bio4j/angulillos/titan/TitanTypedEdgeIndex.java]: TitanTypedEdgeIndex.java.md
-[main/java/com/bio4j/angulillos/titan/TitanTypedVertexIndex.java]: TitanTypedVertexIndex.java.md
-[main/java/com/bio4j/angulillos/titan/TitanUntypedGraph.java]: TitanUntypedGraph.java.md
-[main/java/com/bio4j/angulillos/titan/TitanUntypedSchemaManager.java]: TitanUntypedSchemaManager.java.md
 [test/java/com/bio4j/angulillos/titan/TitanGoGraph.java]: ../../../../../../test/java/com/bio4j/angulillos/titan/TitanGoGraph.java.md
+[main/java/com/bio4j/angulillos/titan/TitanConversions.java]: TitanConversions.java.md
+[main/java/com/bio4j/angulillos/titan/TitanTypedVertexIndex.java]: TitanTypedVertexIndex.java.md
+[main/java/com/bio4j/angulillos/titan/TitanUntypedSchemaManager.java]: TitanUntypedSchemaManager.java.md
+[main/java/com/bio4j/angulillos/titan/TitanTypedEdgeIndex.java]: TitanTypedEdgeIndex.java.md
+[main/java/com/bio4j/angulillos/titan/TitanUntypedGraph.java]: TitanUntypedGraph.java.md
