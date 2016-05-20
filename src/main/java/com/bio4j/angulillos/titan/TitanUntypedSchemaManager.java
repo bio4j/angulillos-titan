@@ -78,4 +78,33 @@ implements UntypedGraphSchema<SchemaManager> {
     return titanManagement;
   }
 
+  public TitanManagement createUniqueIndex(
+    TitanManagement titanManagement,
+    TitanTypedEdgeIndex.Unique<?,?,?,?> index
+  )
+  {
+
+    titanManagement
+      .buildIndex( index.name(), TitanEdge.class )
+      .addKey( titanManagement.getPropertyKey( index.property()._label() ) )
+      .unique()
+      .buildCompositeIndex()
+    ;
+
+    return titanManagement;
+  }
+
+  public TitanManagement createNonUniqueIndex(TitanManagement titanManagement, TitanTypedEdgeIndex.NonUnique<?,?,?,?> index) {
+
+    titanManagement
+      .buildIndex( index.name(), TitanEdge.class )
+      .addKey( titanManagement.getPropertyKey( index.property()._label() ) )
+      .buildCompositeIndex()
+    ;
+
+    return titanManagement;
+  }
+
+
+
 }
