@@ -1,13 +1,11 @@
 package com.bio4j.angulillos.titan;
 
 import com.bio4j.angulillos.*;
-
 import static com.bio4j.angulillos.conversions.*;
 
-import com.thinkaurelius.titan.core.*;
-import com.thinkaurelius.titan.core.schema.*;
+import com.thinkaurelius.titan.core.TitanVertex;
+import com.thinkaurelius.titan.core.TitanEdge;
 
-import java.util.Objects;
 import java.util.stream.Stream;
 import java.util.Collection;
 
