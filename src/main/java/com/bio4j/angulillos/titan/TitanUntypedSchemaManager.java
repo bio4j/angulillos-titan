@@ -67,4 +67,15 @@ implements UntypedGraphSchema<SchemaManager> {
     return titanManagement;
   }
 
+  public TitanManagement createNonUniqueIndex(TitanManagement titanManagement, TitanTypedVertexIndex.NonUnique<?,?,?,?> index) {
+
+    titanManagement
+      .buildIndex( index.name(), TitanVertex.class )
+      .addKey( titanManagement.getPropertyKey( index.property()._label() ) )
+      .buildCompositeIndex()
+    ;
+
+    return titanManagement;
+  }
+
 }
