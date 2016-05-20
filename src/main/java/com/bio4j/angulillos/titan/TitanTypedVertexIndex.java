@@ -33,8 +33,8 @@ public class TitanTypedVertexIndex {
     public P property() { return property; }
     public TitanUntypedGraph titanUntypedGraph() { return titanUntypedGraph; }
 
+    @Override
     public final String name() { return "index.unique"+property._label(); }
-
 
     @Override
     public Stream<V> query(QueryPredicate.Compare predicate, X value) {

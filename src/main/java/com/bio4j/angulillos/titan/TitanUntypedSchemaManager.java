@@ -52,4 +52,19 @@ implements UntypedGraphSchema<SchemaManager> {
     return schemaManager;
   }
 
+  /*
+    **IMPORTANT** before creating an index the property must be already created. Do not forget to commit the `titanManagement` instance *after* you have created everything you wanted. See the Titan docs for more.
+  */
+  public TitanManagement createUniqueIndex(TitanManagement titanManagement, TitanTypedVertexIndex.Unique<?,?,?,?> index) {
+
+    titanManagement
+      .buildIndex( index.name(), TitanVertex.class )
+      .addKey( titanManagement.getPropertyKey( index.property()._label() ) )
+      .unique()
+      .buildCompositeIndex()
+    ;
+
+    return titanManagement;
+  }
+
 }
