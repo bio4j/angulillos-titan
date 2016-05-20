@@ -38,6 +38,20 @@ public class TitanTypedVertexIndex {
         property().elementType().fromRaw( (TitanVertex) v )
       );
     }
+
+    @Override
+    public Stream<V> query(QueryPredicate.Contain predicate, Collection<X> values) {
+
+      return stream(
+        titanUntypedGraph().titanGraph()
+          .query()
+          .has( "label", property().elementType()._label() )
+          .has( property()._label(), TitanConversions.Predicate.asTitanContain(predicate), values )
+          .vertices()
+      ).map( v ->
+        property().elementType().fromRaw( (TitanVertex) v )
+      );
+    }
   }
 }
 
