@@ -7,10 +7,10 @@ bucketSuffix  := "era7.com"
 javaVersion   := "1.8"
 
 libraryDependencies ++= Seq(
-  "bio4j"                   % "angulillos" % "0.7.2",
+  "bio4j"                   % "angulillos" % "0.8.0-SNAPSHOT",
   "com.thinkaurelius.titan" % "titan-core" % "1.0.0"
 )
-
-excludeFilter in unmanagedSources :=
-  (excludeFilter in unmanagedSources).value ||
-  "*Index.java"
+//
+// excludeFilter in unmanagedSources :=
+//   (excludeFilter in unmanagedSources).value ||
+//   "*Index.java"
