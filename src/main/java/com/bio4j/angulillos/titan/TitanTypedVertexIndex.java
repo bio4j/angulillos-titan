@@ -13,7 +13,7 @@ import java.util.Collection;
 
 public class TitanTypedVertexIndex {
 
-  public static abstract class Unique<
+  public static class Unique<
     V  extends      TypedVertex<V,VT, ?, TitanVertex,TitanEdge>,
     VT extends TypedVertex.Type<V,VT, ?, TitanVertex,TitanEdge>,
     P extends Property<VT,X> & Arity.FromAtMostOne, X
@@ -21,8 +21,19 @@ public class TitanTypedVertexIndex {
   implements TypedVertexIndex.Unique<V,VT,P,X>
   {
 
-    public abstract P property();
-    public abstract TitanUntypedGraph titanUntypedGraph();
+    private final P property;
+    private final TitanUntypedGraph titanUntypedGraph;
+
+    public Unique(P property, TitanUntypedGraph titanUntypedGraph) {
+
+      this.property           = property;
+      this.titanUntypedGraph  = titanUntypedGraph;
+    }
+
+    public P property() { return property; }
+    public TitanUntypedGraph titanUntypedGraph() { return titanUntypedGraph; }
+
+    public final String name() { return "index.unique"+property._label(); }
 
 
     @Override
