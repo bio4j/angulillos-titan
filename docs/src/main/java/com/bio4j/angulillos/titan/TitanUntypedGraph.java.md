@@ -182,6 +182,58 @@ This two methods will work with *this* transaction, not the implicit one.
         .vertices()
     );
   }
+
+  @Override
+  public <X> Stream<TitanVertex> queryVertices(AnyProperty p, QueryPredicate.Contain predicate, java.util.Collection<X> values) {
+
+    return stream(
+      titanGraph()
+        .query()
+        .has( "label", p.elementType()._label() )
+        .has( p._label(), TitanConversions.Predicate.asTitanContain(predicate), values )
+        .vertices()
+    )
+    .map( v -> (TitanVertex) v );
+  }
+
+  @Override
+  public <X> Stream<TitanVertex> queryVertices(AnyProperty p, QueryPredicate.Compare predicate, X value) {
+
+    return stream(
+      titanGraph()
+        .query()
+        .has( "label", p.elementType()._label() )
+        .has( p._label(), TitanConversions.Predicate.asTitanCmp(predicate), value )
+        .vertices()
+    )
+    .map( v -> (TitanVertex) v );
+  }
+
+  @Override
+  public <X> Stream<TitanEdge> queryEdges(AnyProperty p, QueryPredicate.Contain predicate, java.util.Collection<X> values) {
+
+    return stream(
+      titanGraph()
+        .query()
+        .has( "label", p.elementType()._label() )
+        .has( p._label(), TitanConversions.Predicate.asTitanContain(predicate), values )
+        .edges()
+    )
+    .map( v -> (TitanEdge) v );
+  }
+
+  @Override
+  public <X> Stream<TitanEdge> queryEdges(AnyProperty p, QueryPredicate.Compare predicate, X value) {
+
+    return stream(
+      titanGraph()
+        .query()
+        .has( "label", p.elementType()._label() )
+        .has( p._label(), TitanConversions.Predicate.asTitanCmp(predicate), value )
+        .edges()
+    )
+    .map( v -> (TitanEdge) v );
+  }
 }
 
 ```
@@ -192,6 +244,6 @@ This two methods will work with *this* transaction, not the implicit one.
 [test/java/com/bio4j/angulillos/titan/TitanGoGraph.java]: ../../../../../../test/java/com/bio4j/angulillos/titan/TitanGoGraph.java.md
 [main/java/com/bio4j/angulillos/titan/TitanConversions.java]: TitanConversions.java.md
 [main/java/com/bio4j/angulillos/titan/TitanTypedVertexIndex.java]: TitanTypedVertexIndex.java.md
-[main/java/com/bio4j/angulillos/titan/TitanUntypedSchemaManager.java]: TitanUntypedSchemaManager.java.md
+[main/java/com/bio4j/angulillos/titan/TitanUntypedGraphSchema.java]: TitanUntypedGraphSchema.java.md
 [main/java/com/bio4j/angulillos/titan/TitanTypedEdgeIndex.java]: TitanTypedEdgeIndex.java.md
 [main/java/com/bio4j/angulillos/titan/TitanUntypedGraph.java]: TitanUntypedGraph.java.md
