@@ -165,4 +165,56 @@ implements
         .vertices()
     );
   }
+
+  @Override
+  public <X> Stream<TitanVertex> queryVertices(AnyProperty p, QueryPredicate.Contain predicate, java.util.Collection<X> values) {
+
+    return stream(
+      titanGraph()
+        .query()
+        .has( "label", p.elementType()._label() )
+        .has( p._label(), TitanConversions.Predicate.asTitanContain(predicate), values )
+        .vertices()
+    )
+    .map( v -> (TitanVertex) v );
+  }
+
+  @Override
+  public <X> Stream<TitanVertex> queryVertices(AnyProperty p, QueryPredicate.Compare predicate, X value) {
+
+    return stream(
+      titanGraph()
+        .query()
+        .has( "label", p.elementType()._label() )
+        .has( p._label(), TitanConversions.Predicate.asTitanCmp(predicate), value )
+        .vertices()
+    )
+    .map( v -> (TitanVertex) v );
+  }
+
+  @Override
+  public <X> Stream<TitanEdge> queryEdges(AnyProperty p, QueryPredicate.Contain predicate, java.util.Collection<X> values) {
+
+    return stream(
+      titanGraph()
+        .query()
+        .has( "label", p.elementType()._label() )
+        .has( p._label(), TitanConversions.Predicate.asTitanContain(predicate), values )
+        .edges()
+    )
+    .map( v -> (TitanEdge) v );
+  }
+
+  @Override
+  public <X> Stream<TitanEdge> queryEdges(AnyProperty p, QueryPredicate.Compare predicate, X value) {
+
+    return stream(
+      titanGraph()
+        .query()
+        .has( "label", p.elementType()._label() )
+        .has( p._label(), TitanConversions.Predicate.asTitanCmp(predicate), value )
+        .edges()
+    )
+    .map( v -> (TitanEdge) v );
+  }
 }
