@@ -11,23 +11,23 @@ import com.thinkaurelius.titan.core.schema.*;
 import org.apache.tinkerpop.gremlin.structure.Direction;
 
 
-public class TitanUntypedSchemaManager
-implements UntypedGraphSchema<SchemaManager> {
+public class TitanUntypedGraphSchema
+implements UntypedGraphSchema<TitanManagement> {
 
   // TODO: create if not exists?
 
   /* This method should take into account vertex label */
-  public SchemaManager createVertexType(SchemaManager schemaManager, AnyVertexType vertexType) {
-    schemaManager
+  public TitanManagement createVertexType(TitanManagement titanManagement, AnyVertexType vertexType) {
+    titanManagement
       .makeVertexLabel(vertexType._label())
       // .setStatic() ?
       .make();
-    return schemaManager;
+    return titanManagement;
   }
 
   /* This method should take into account edge label, source/target types and to/from-arities */
-  public SchemaManager createEdgeType(SchemaManager schemaManager, AnyEdgeType edgeType) {
-    schemaManager
+  public TitanManagement createEdgeType(TitanManagement titanManagement, AnyEdgeType edgeType) {
+    titanManagement
       .makeEdgeLabel(edgeType._label())
       .directed()
       .multiplicity(
@@ -39,53 +39,31 @@ implements UntypedGraphSchema<SchemaManager> {
       // TODO: for making signature, we have to create all edge's properties beforehand
       // .signature(edgeType.properties...)
       .make();
-    return schemaManager;
+    return titanManagement;
   }
 
   /* This method should take into account property's element type and from-arity */
-  public SchemaManager createProperty(SchemaManager schemaManager, AnyProperty property) {
-    schemaManager
+  public TitanManagement createProperty(TitanManagement titanManagement, AnyProperty property) {
+    titanManagement
       .makePropertyKey(property._label())
       .cardinality( Cardinality.SINGLE )
       .dataType( property.valueClass() )
       .make();
-    return schemaManager;
+    return titanManagement;
   }
 
   /*
     **IMPORTANT** before creating an index the property must be already created. Do not forget to commit the `titanManagement` instance *after* you have created everything you wanted. See the Titan docs for more.
   */
-  public TitanManagement createUniqueIndex(TitanManagement titanManagement, TitanTypedVertexIndex.Unique<?,?,?,?> index) {
-
-    titanManagement
-      .buildIndex( index.name(), TitanVertex.class )
-      .addKey( titanManagement.getPropertyKey( index.property()._label() ) )
-      .unique()
-      .buildCompositeIndex()
-    ;
-
-    return titanManagement;
-  }
-
-  public TitanManagement createNonUniqueIndex(TitanManagement titanManagement, TitanTypedVertexIndex.NonUnique<?,?,?,?> index) {
-
-    titanManagement
-      .buildIndex( index.name(), TitanVertex.class )
-      .addKey( titanManagement.getPropertyKey( index.property()._label() ) )
-      .buildCompositeIndex()
-    ;
-
-    return titanManagement;
-  }
-
-  public TitanManagement createUniqueIndex(
+  @Override
+  public TitanManagement createUniqueVertexIndex(
     TitanManagement titanManagement,
-    TitanTypedEdgeIndex.Unique<?,?,?,?> index
+    TypedVertexIndex.Unique<?,?,?,?,?,?> index
   )
   {
 
     titanManagement
-      .buildIndex( index.name(), TitanEdge.class )
+      .buildIndex( index._label(), TitanVertex.class )
       .addKey( titanManagement.getPropertyKey( index.property()._label() ) )
       .unique()
       .buildCompositeIndex()
@@ -94,10 +72,48 @@ implements UntypedGraphSchema<SchemaManager> {
     return titanManagement;
   }
 
-  public TitanManagement createNonUniqueIndex(TitanManagement titanManagement, TitanTypedEdgeIndex.NonUnique<?,?,?,?> index) {
+  @Override
+  public TitanManagement createNonUniqueVertexIndex(
+    TitanManagement titanManagement,
+    TypedVertexIndex.NonUnique<?,?,?,?,?,?> index
+  )
+  {
 
     titanManagement
-      .buildIndex( index.name(), TitanEdge.class )
+      .buildIndex( index._label(), TitanVertex.class )
+      .addKey( titanManagement.getPropertyKey( index.property()._label() ) )
+      .buildCompositeIndex()
+    ;
+
+    return titanManagement;
+  }
+
+  @Override
+  public TitanManagement createUniqueEdgeIndex(
+    TitanManagement titanManagement,
+    TypedEdgeIndex.Unique<?,?,?,?,?,?> index
+  )
+  {
+
+    titanManagement
+      .buildIndex( index._label(), TitanEdge.class )
+      .addKey( titanManagement.getPropertyKey( index.property()._label() ) )
+      .unique()
+      .buildCompositeIndex()
+    ;
+
+    return titanManagement;
+  }
+
+  @Override
+  public TitanManagement createNonUniqueEdgeIndex(
+    TitanManagement titanManagement,
+    TypedEdgeIndex.NonUnique<?,?,?,?,?,?> index
+  )
+  {
+
+    titanManagement
+      .buildIndex( index._label(), TitanEdge.class )
       .addKey( titanManagement.getPropertyKey( index.property()._label() ) )
       .buildCompositeIndex()
     ;
