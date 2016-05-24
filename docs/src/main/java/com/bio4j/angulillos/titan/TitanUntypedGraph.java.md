@@ -18,7 +18,8 @@ import java.util.Optional;
 public class TitanUntypedGraph
 implements
   UntypedGraph.Transactional<TitanVertex, TitanEdge>,
-  UntypedGraph.Transaction<TitanVertex, TitanEdge>
+  UntypedGraph.Transaction<TitanVertex, TitanEdge>,
+  AutoCloseable
 {
 
   private final TitanGraph titanGraph;
@@ -53,6 +54,9 @@ This method will (try to) commit the implictly opened thread-local transaction.
   public void shutdown() { titanGraph.close(); }
 
   @Override
+  public void close() { titanGraph.tx().close(); }
+
+  @Override
   public TitanUntypedGraph graph() { return this; }
 ```
 
@@ -84,15 +88,16 @@ This class wraps a global threadsafe Titan transaction; it is a TitanUntypedGrap
 ```
 
 
-This two methods will work with *this* transaction, not the implicit one.
+All methods here will work with *this* transaction, not the implicit one.
 
 
 ```java
     @Override
-    public final void commit() { rawTx.commit(); }
-
+    public final void commit()    { rawTx.commit();   }
     @Override
-    public void rollback() { rawTx.rollback(); }
+    public final void rollback()  { rawTx.rollback(); }
+    @Override
+    public final void close()     { rawTx.close();    }
   }
 
   @Override
