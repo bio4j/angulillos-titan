@@ -16,7 +16,8 @@ import java.util.Optional;
 public class TitanUntypedGraph
 implements
   UntypedGraph.Transactional<TitanVertex, TitanEdge>,
-  UntypedGraph.Transaction<TitanVertex, TitanEdge>
+  UntypedGraph.Transaction<TitanVertex, TitanEdge>,
+  AutoCloseable
 {
 
   private final TitanGraph titanGraph;
@@ -43,6 +44,9 @@ implements
 
   @Override
   public void shutdown() { titanGraph.close(); }
+
+  @Override
+  public void close() { titanGraph.tx().close(); }
 
   @Override
   public TitanUntypedGraph graph() { return this; }
