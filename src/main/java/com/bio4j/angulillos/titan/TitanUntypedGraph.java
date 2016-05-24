@@ -73,13 +73,14 @@ implements
     public final ConcurrentTransaction graph() { return this; }
 
     /*
-      This two methods will work with *this* transaction, not the implicit one.
+      All methods here will work with *this* transaction, not the implicit one.
     */
     @Override
-    public final void commit() { rawTx.commit(); }
-
+    public final void commit()    { rawTx.commit();   }
     @Override
-    public void rollback() { rawTx.rollback(); }
+    public final void rollback()  { rawTx.rollback(); }
+    @Override
+    public final void close()     { rawTx.close();    }
   }
 
   @Override
