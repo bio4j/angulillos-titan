@@ -1,0 +1,4 @@
+- make UntypedTitanGraph AutoCloseable
+- make ConcurrentTransaction override close to close itself
+
+Note that close in TitanUntypedGraph will only close the thread-local transaction, **not** the graph; for that use shutdown.
