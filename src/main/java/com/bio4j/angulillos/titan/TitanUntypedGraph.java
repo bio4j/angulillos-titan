@@ -10,8 +10,6 @@ import com.thinkaurelius.titan.core.schema.*;
 import org.apache.tinkerpop.gremlin.structure.Direction;
 
 import java.util.stream.Stream;
-import java.util.Optional;
-
 
 public class TitanUntypedGraph
 implements
@@ -19,6 +17,9 @@ implements
   UntypedGraph.Transaction<TitanVertex, TitanEdge>,
   AutoCloseable
 {
+
+  /* The property used by Titan to store vertex labels */
+  private static final String LABEL = "label";
 
   private final TitanGraph titanGraph;
   public  final TitanGraph titanGraph() { return this.titanGraph; }
@@ -177,7 +178,7 @@ implements
     return stream(
       titanGraph()
         .query()
-        .has( "label", p.elementType()._label() )
+        .has( LABEL, p.elementType()._label() )
         .has( p._label(), TitanConversions.Predicate.asTitanContain(predicate), values )
         .vertices()
     )
@@ -190,7 +191,7 @@ implements
     return stream(
       titanGraph()
         .query()
-        .has( "label", p.elementType()._label() )
+        .has( LABEL, p.elementType()._label() )
         .has( p._label(), TitanConversions.Predicate.asTitanCmp(predicate), value )
         .vertices()
     )
@@ -203,7 +204,7 @@ implements
     return stream(
       titanGraph()
         .query()
-        .has( "label", p.elementType()._label() )
+        .has( LABEL, p.elementType()._label() )
         .has( p._label(), TitanConversions.Predicate.asTitanContain(predicate), values )
         .edges()
     )
@@ -216,7 +217,7 @@ implements
     return stream(
       titanGraph()
         .query()
-        .has( "label", p.elementType()._label() )
+        .has( LABEL, p.elementType()._label() )
         .has( p._label(), TitanConversions.Predicate.asTitanCmp(predicate), value )
         .edges()
     )

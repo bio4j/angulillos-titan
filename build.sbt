@@ -10,7 +10,3 @@ libraryDependencies ++= Seq(
   "bio4j"                   % "angulillos" % "0.8.1",
   "com.thinkaurelius.titan" % "titan-core" % "1.0.0"
 )
-//
-// excludeFilter in unmanagedSources :=
-//   (excludeFilter in unmanagedSources).value ||
-//   "*Index.java"

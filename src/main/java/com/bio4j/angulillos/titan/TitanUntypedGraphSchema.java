@@ -8,9 +8,6 @@ import static com.bio4j.angulillos.titan.TitanConversions.*;
 import com.thinkaurelius.titan.core.*;
 import com.thinkaurelius.titan.core.schema.*;
 
-import org.apache.tinkerpop.gremlin.structure.Direction;
-
-
 public class TitanUntypedGraphSchema
 implements UntypedGraphSchema<TitanManagement> {
 
