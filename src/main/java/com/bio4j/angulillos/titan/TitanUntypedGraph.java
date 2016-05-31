@@ -188,14 +188,28 @@ implements
   @Override
   public <X> Stream<TitanVertex> queryVertices(AnyProperty p, QueryPredicate.Compare predicate, X value) {
 
-    return stream(
-      titanGraph()
+    if( predicate.equals(QueryPredicate.Compare.EQUAL) ) {
+
+      Iterable<TitanVertex> vs = titanGraph()
+        .query()
+        .has( LABEL, p.elementType()._label() )
+        .has( p._label(), value )
+        .vertices()
+      ;
+
+      return stream(vs);
+    }
+    else {
+
+      Iterable<TitanVertex> vs = titanGraph()
         .query()
         .has( LABEL, p.elementType()._label() )
         .has( p._label(), TitanConversions.Predicate.asTitanCmp(predicate), value )
         .vertices()
-    )
-    .map( v -> (TitanVertex) v );
+      ;
+
+      return stream(vs);
+    }
   }
 
   @Override
