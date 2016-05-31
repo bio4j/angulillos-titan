@@ -1,0 +1,4 @@
+- general code cleanup
+- use specialized has method for vertex equals queries
+- use specialized has method for edge equals queries
+- remove stale test file

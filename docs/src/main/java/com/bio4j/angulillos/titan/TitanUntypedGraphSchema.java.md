@@ -10,9 +10,6 @@ import static com.bio4j.angulillos.titan.TitanConversions.*;
 import com.thinkaurelius.titan.core.*;
 import com.thinkaurelius.titan.core.schema.*;
 
-import org.apache.tinkerpop.gremlin.structure.Direction;
-
-
 public class TitanUntypedGraphSchema
 implements UntypedGraphSchema<TitanManagement> {
 
@@ -145,9 +142,6 @@ This method should take into account property's element type and from-arity
 
 
 
-[test/java/com/bio4j/angulillos/titan/TitanGoGraph.java]: ../../../../../../test/java/com/bio4j/angulillos/titan/TitanGoGraph.java.md
 [main/java/com/bio4j/angulillos/titan/TitanConversions.java]: TitanConversions.java.md
-[main/java/com/bio4j/angulillos/titan/TitanTypedVertexIndex.java]: TitanTypedVertexIndex.java.md
 [main/java/com/bio4j/angulillos/titan/TitanUntypedGraphSchema.java]: TitanUntypedGraphSchema.java.md
-[main/java/com/bio4j/angulillos/titan/TitanTypedEdgeIndex.java]: TitanTypedEdgeIndex.java.md
 [main/java/com/bio4j/angulillos/titan/TitanUntypedGraph.java]: TitanUntypedGraph.java.md

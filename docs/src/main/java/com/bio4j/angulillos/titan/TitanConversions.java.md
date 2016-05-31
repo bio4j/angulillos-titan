@@ -8,14 +8,13 @@ import com.bio4j.angulillos.Arity;
 import com.thinkaurelius.titan.core.attribute.Cmp;
 import com.thinkaurelius.titan.core.attribute.Contain;
 import com.thinkaurelius.titan.core.Multiplicity;
-import com.thinkaurelius.titan.core.Cardinality;
-
 
 public final class TitanConversions {
 
   public static final class Predicate {
 
     public static final Cmp asTitanCmp(QueryPredicate.Compare predicate) {
+
       switch(predicate) {
         case EQUAL:              return Cmp.EQUAL;
         case NOT_EQUAL:          return Cmp.NOT_EQUAL;
@@ -29,6 +28,7 @@ public final class TitanConversions {
     }
 
     public static final Contain asTitanContain(QueryPredicate.Contain predicate) {
+
       switch(predicate) {
         case IN:              return Contain.IN;
         case NOT_IN:          return Contain.NOT_IN;
@@ -36,7 +36,6 @@ public final class TitanConversions {
         default:              return Contain.IN;
       }
     }
-
   }
 
   public static final class Arities {
@@ -95,9 +94,6 @@ public final class TitanConversions {
 
 
 
-[test/java/com/bio4j/angulillos/titan/TitanGoGraph.java]: ../../../../../../test/java/com/bio4j/angulillos/titan/TitanGoGraph.java.md
 [main/java/com/bio4j/angulillos/titan/TitanConversions.java]: TitanConversions.java.md
-[main/java/com/bio4j/angulillos/titan/TitanTypedVertexIndex.java]: TitanTypedVertexIndex.java.md
 [main/java/com/bio4j/angulillos/titan/TitanUntypedGraphSchema.java]: TitanUntypedGraphSchema.java.md
-[main/java/com/bio4j/angulillos/titan/TitanTypedEdgeIndex.java]: TitanTypedEdgeIndex.java.md
 [main/java/com/bio4j/angulillos/titan/TitanUntypedGraph.java]: TitanUntypedGraph.java.md
