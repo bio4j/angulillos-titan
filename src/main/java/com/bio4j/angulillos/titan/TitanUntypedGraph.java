@@ -228,13 +228,27 @@ implements
   @Override
   public <X> Stream<TitanEdge> queryEdges(AnyProperty p, QueryPredicate.Compare predicate, X value) {
 
-    return stream(
-      titanGraph()
+    if( predicate.equals(QueryPredicate.Compare.EQUAL) ) {
+
+      Iterable<TitanEdge> es = titanGraph()
+        .query()
+        .has( LABEL, p.elementType()._label() )
+        .has( p._label(), value )
+        .edges()
+      ;
+
+      return stream(es);
+    }
+    else {
+
+      Iterable<TitanEdge> es = titanGraph()
         .query()
         .has( LABEL, p.elementType()._label() )
         .has( p._label(), TitanConversions.Predicate.asTitanCmp(predicate), value )
         .edges()
-    )
-    .map( v -> (TitanEdge) v );
+      ;
+
+      return stream(es);
+    }
   }
 }
