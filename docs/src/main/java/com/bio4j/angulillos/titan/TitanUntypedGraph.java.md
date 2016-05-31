@@ -12,8 +12,6 @@ import com.thinkaurelius.titan.core.schema.*;
 import org.apache.tinkerpop.gremlin.structure.Direction;
 
 import java.util.stream.Stream;
-import java.util.Optional;
-
 
 public class TitanUntypedGraph
 implements
@@ -21,6 +19,12 @@ implements
   UntypedGraph.Transaction<TitanVertex, TitanEdge>,
   AutoCloseable
 {
+```
+
+The property used by Titan to store vertex labels
+
+```java
+  private static final String LABEL = "label";
 
   private final TitanGraph titanGraph;
   public  final TitanGraph titanGraph() { return this.titanGraph; }
@@ -194,7 +198,7 @@ All methods here will work with *this* transaction, not the implicit one.
     return stream(
       titanGraph()
         .query()
-        .has( "label", p.elementType()._label() )
+        .has( LABEL, p.elementType()._label() )
         .has( p._label(), TitanConversions.Predicate.asTitanContain(predicate), values )
         .vertices()
     )
@@ -204,14 +208,28 @@ All methods here will work with *this* transaction, not the implicit one.
   @Override
   public <X> Stream<TitanVertex> queryVertices(AnyProperty p, QueryPredicate.Compare predicate, X value) {
 
-    return stream(
-      titanGraph()
+    if( predicate.equals(QueryPredicate.Compare.EQUAL) ) {
+
+      Iterable<TitanVertex> vs = titanGraph()
         .query()
-        .has( "label", p.elementType()._label() )
+        .has( LABEL, p.elementType()._label() )
+        .has( p._label(), value )
+        .vertices()
+      ;
+
+      return stream(vs);
+    }
+    else {
+
+      Iterable<TitanVertex> vs = titanGraph()
+        .query()
+        .has( LABEL, p.elementType()._label() )
         .has( p._label(), TitanConversions.Predicate.asTitanCmp(predicate), value )
         .vertices()
-    )
-    .map( v -> (TitanVertex) v );
+      ;
+
+      return stream(vs);
+    }
   }
 
   @Override
@@ -220,7 +238,7 @@ All methods here will work with *this* transaction, not the implicit one.
     return stream(
       titanGraph()
         .query()
-        .has( "label", p.elementType()._label() )
+        .has( LABEL, p.elementType()._label() )
         .has( p._label(), TitanConversions.Predicate.asTitanContain(predicate), values )
         .edges()
     )
@@ -230,14 +248,28 @@ All methods here will work with *this* transaction, not the implicit one.
   @Override
   public <X> Stream<TitanEdge> queryEdges(AnyProperty p, QueryPredicate.Compare predicate, X value) {
 
-    return stream(
-      titanGraph()
+    if( predicate.equals(QueryPredicate.Compare.EQUAL) ) {
+
+      Iterable<TitanEdge> es = titanGraph()
         .query()
-        .has( "label", p.elementType()._label() )
+        .has( LABEL, p.elementType()._label() )
+        .has( p._label(), value )
+        .edges()
+      ;
+
+      return stream(es);
+    }
+    else {
+
+      Iterable<TitanEdge> es = titanGraph()
+        .query()
+        .has( LABEL, p.elementType()._label() )
         .has( p._label(), TitanConversions.Predicate.asTitanCmp(predicate), value )
         .edges()
-    )
-    .map( v -> (TitanEdge) v );
+      ;
+
+      return stream(es);
+    }
   }
 }
 
@@ -246,9 +278,6 @@ All methods here will work with *this* transaction, not the implicit one.
 
 
 
-[test/java/com/bio4j/angulillos/titan/TitanGoGraph.java]: ../../../../../../test/java/com/bio4j/angulillos/titan/TitanGoGraph.java.md
 [main/java/com/bio4j/angulillos/titan/TitanConversions.java]: TitanConversions.java.md
-[main/java/com/bio4j/angulillos/titan/TitanTypedVertexIndex.java]: TitanTypedVertexIndex.java.md
 [main/java/com/bio4j/angulillos/titan/TitanUntypedGraphSchema.java]: TitanUntypedGraphSchema.java.md
-[main/java/com/bio4j/angulillos/titan/TitanTypedEdgeIndex.java]: TitanTypedEdgeIndex.java.md
 [main/java/com/bio4j/angulillos/titan/TitanUntypedGraph.java]: TitanUntypedGraph.java.md
