@@ -1,0 +1,1 @@
+This release removes the check on vertex/edge label when querying through a property. Properties are globally unique, so it does not add anything to check that their source is correctly typed.
