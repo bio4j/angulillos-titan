@@ -198,7 +198,6 @@ All methods here will work with *this* transaction, not the implicit one.
     return stream(
       titanGraph()
         .query()
-        .has( LABEL, p.elementType()._label() )
         .has( p._label(), TitanConversions.Predicate.asTitanContain(predicate), values )
         .vertices()
     );
@@ -222,7 +221,6 @@ All methods here will work with *this* transaction, not the implicit one.
 
       Iterable<TitanVertex> vs = titanGraph()
         .query()
-        .has( LABEL, p.elementType()._label() )
         .has( p._label(), value )
         .vertices()
       ;
@@ -233,7 +231,6 @@ All methods here will work with *this* transaction, not the implicit one.
 
       Iterable<TitanVertex> vs = titanGraph()
         .query()
-        .has( LABEL, p.elementType()._label() )
         .has( p._label(), TitanConversions.Predicate.asTitanCmp(predicate), value )
         .vertices()
       ;
@@ -248,7 +245,6 @@ All methods here will work with *this* transaction, not the implicit one.
     return stream(
       titanGraph()
         .query()
-        .has( LABEL, p.elementType()._label() )
         .has( p._label(), TitanConversions.Predicate.asTitanContain(predicate), values )
         .edges()
     );
@@ -261,7 +257,6 @@ All methods here will work with *this* transaction, not the implicit one.
 
       Iterable<TitanEdge> es = titanGraph()
         .query()
-        .has( LABEL, p.elementType()._label() )
         .has( p._label(), value )
         .edges()
       ;
@@ -272,7 +267,6 @@ All methods here will work with *this* transaction, not the implicit one.
 
       Iterable<TitanEdge> es = titanGraph()
         .query()
-        .has( LABEL, p.elementType()._label() )
         .has( p._label(), TitanConversions.Predicate.asTitanCmp(predicate), value )
         .edges()
       ;
