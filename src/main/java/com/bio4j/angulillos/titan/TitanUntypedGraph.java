@@ -18,9 +18,6 @@ implements
   AutoCloseable
 {
 
-  /* The property used by Titan to store vertex labels */
-  private static final String LABEL = "label";
-
   private final TitanGraph titanGraph;
   public  final TitanGraph titanGraph() { return this.titanGraph; }
 
@@ -176,8 +173,7 @@ implements
   public <X> Stream<TitanVertex> queryVertices(AnyProperty p, QueryPredicate.Contain predicate, java.util.Collection<X> values) {
 
     return stream(
-      titanGraph()
-        .query()
+      titanGraph().query()
         .has( p._label(), TitanConversions.Predicate.asTitanContain(predicate), values )
         .vertices()
     );
@@ -188,10 +184,10 @@ implements
 
     return stream(
       titanGraph()
-        .query()
-        .has( LABEL, vertexType._label() )
-        .vertices()
-    );
+        .traversal().V()
+        .hasLabel(vertexType._label())
+    )
+    .map(v -> (TitanVertex) v);
   }
 
   @Override
