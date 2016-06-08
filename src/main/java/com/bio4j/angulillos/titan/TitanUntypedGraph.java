@@ -178,7 +178,6 @@ implements
     return stream(
       titanGraph()
         .query()
-        .has( LABEL, p.elementType()._label() )
         .has( p._label(), TitanConversions.Predicate.asTitanContain(predicate), values )
         .vertices()
     );
@@ -202,7 +201,6 @@ implements
 
       Iterable<TitanVertex> vs = titanGraph()
         .query()
-        .has( LABEL, p.elementType()._label() )
         .has( p._label(), value )
         .vertices()
       ;
@@ -213,7 +211,6 @@ implements
 
       Iterable<TitanVertex> vs = titanGraph()
         .query()
-        .has( LABEL, p.elementType()._label() )
         .has( p._label(), TitanConversions.Predicate.asTitanCmp(predicate), value )
         .vertices()
       ;
@@ -228,7 +225,6 @@ implements
     return stream(
       titanGraph()
         .query()
-        .has( LABEL, p.elementType()._label() )
         .has( p._label(), TitanConversions.Predicate.asTitanContain(predicate), values )
         .edges()
     );
@@ -241,7 +237,6 @@ implements
 
       Iterable<TitanEdge> es = titanGraph()
         .query()
-        .has( LABEL, p.elementType()._label() )
         .has( p._label(), value )
         .edges()
       ;
@@ -252,7 +247,6 @@ implements
 
       Iterable<TitanEdge> es = titanGraph()
         .query()
-        .has( LABEL, p.elementType()._label() )
         .has( p._label(), TitanConversions.Predicate.asTitanCmp(predicate), value )
         .edges()
       ;
