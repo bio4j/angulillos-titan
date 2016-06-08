@@ -186,6 +186,17 @@ implements
   }
 
   @Override
+  public Stream<TitanVertex> vertices(AnyVertexType vertexType) {
+
+    return stream(
+      titanGraph()
+        .query()
+        .has( LABEL, vertexType._label() )
+        .vertices()
+    );
+  }
+
+  @Override
   public <X> Stream<TitanVertex> queryVertices(AnyProperty p, QueryPredicate.Compare predicate, X value) {
 
     if( predicate.equals(QueryPredicate.Compare.EQUAL) ) {
