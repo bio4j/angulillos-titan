@@ -1,0 +1,1 @@
+Bugfix release: `vertices()` now uses the TinkerPop3 API, instead of raw Titan, which looks to be buggy.
