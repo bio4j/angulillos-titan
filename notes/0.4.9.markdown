@@ -1,0 +1,1 @@
+This release updates to angulillos 0.9.1, which fixes a serious bug with arities. See angulillos release notes.
