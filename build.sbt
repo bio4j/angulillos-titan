@@ -1,4 +1,4 @@
-Nice.javaProject
+enablePlugins(JavaOnlySettings)
 
 name          := "angulillos-titan"
 description   := "use Titan with a lot of angulillos!"
