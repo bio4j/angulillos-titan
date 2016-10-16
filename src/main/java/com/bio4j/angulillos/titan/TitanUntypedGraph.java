@@ -180,7 +180,9 @@ implements
   }
 
   /*
-    **IMPORTANT** note that in Titan 1.0.0 this method will iterate over **all** vertices and then *filter* those with label `vertexType._label()`.
+    **IMPORTANT** note that in Titan 1.0.0 this method will iterate over **all** vertices and then *filter* those with label `vertexType._label()`. For a discussion see
+
+    - [Titan users post](https://groups.google.com/forum/#!topic/aureliusgraphs/f2HX9hUvBuA)
   */
   @Override
   public Stream<TitanVertex> vertices(AnyVertexType vertexType) {
