@@ -179,6 +179,9 @@ implements
     );
   }
 
+  /*
+    **IMPORTANT** note that in Titan 1.0.0 this method will iterate over **all** vertices and then *filter* those with label `vertexType._label()`.
+  */
   @Override
   public Stream<TitanVertex> vertices(AnyVertexType vertexType) {
 
