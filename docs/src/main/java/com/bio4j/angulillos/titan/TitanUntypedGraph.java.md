@@ -195,7 +195,13 @@ All methods here will work with *this* transaction, not the implicit one.
         .vertices()
     );
   }
+```
 
+
+**IMPORTANT** note that in Titan 1.0.0 this method will iterate over **all** vertices and then *filter* those with label `vertexType._label()`.
+
+
+```java
   @Override
   public Stream<TitanVertex> vertices(AnyVertexType vertexType) {
 

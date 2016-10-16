@@ -12,9 +12,6 @@ import com.thinkaurelius.titan.core.schema.*;
 
 public class TitanUntypedGraphSchema
 implements UntypedGraphSchema<TitanManagement> {
-
-  // TODO: create if not exists?
-
 ```
 
 This method should take into account vertex label
@@ -23,7 +20,6 @@ This method should take into account vertex label
   public TitanManagement createVertexType(TitanManagement titanManagement, AnyVertexType vertexType) {
     titanManagement
       .makeVertexLabel(vertexType._label())
-      // .setStatic() ?
       .make();
     return titanManagement;
   }
@@ -132,9 +128,6 @@ This method should take into account property's element type and from-arity
 
     return titanManagement;
   }
-
-
-
 }
 
 ```
