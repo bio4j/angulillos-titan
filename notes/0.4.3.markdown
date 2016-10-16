@@ -1,3 +1,5 @@
+**IMPORTANT** *This version is affected by [the arities bug](https://github.com/bio4j/angulillos/pull/86). Update to [0.4.9](https://github.com/bio4j/angulillos-titan/releases/tag/v0.4.9).*
+
 - make UntypedTitanGraph AutoCloseable
 - make ConcurrentTransaction override close to close itself
 
